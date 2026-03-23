@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wingman Academies — Professional Pilot Training Perth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy-mid: #112040;
+    --navy-light: #1a2f55;
+    --gold: #c8973a;
+    --gold-light: #e2b86a;
+    --gold-pale: #f5e9d3;
+    --white: #ffffff;
+    --off-white: #f7f5f0;
+    --gray-light: #e8e4dc;
+    --gray-mid: #9a9490;
+    --text-dark: #1a1714;
+    --text-body: #3d3830;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--white);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px;
+    height: 72px;
+    background: rgba(10,22,40,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200,151,58,0.2);
+  }
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo .wing-icon {
+    width: 32px; height: 32px;
+    background: var(--gold);
+    clip-path: polygon(0 80%, 35% 20%, 55% 60%, 75% 10%, 100% 80%, 75% 70%, 55% 100%, 35% 70%);
+  }
+  .nav-links {
+    display: flex; align-items: center; gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold-light); }
+  .nav-cta {
+    background: var(--gold);
+    color: var(--navy) !important;
+    font-weight: 600 !important;
+    padding: 10px 22px;
+    border-radius: 4px;
+    letter-spacing: 0.03em;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--gold-light) !important; color: var(--navy) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: var(--navy);
+    position: relative;
+    display: flex; align-items: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 50%, rgba(200,151,58,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 80% at 20% 80%, rgba(26,47,85,0.8) 0%, transparent 70%),
+      url('https://wingmanacademies.com/wp-content/uploads/2026/03/IMG_0335-scaled-e1773124369425.jpeg') center/cover no-repeat;
+    filter: brightness(0.35);
+  }
+  .hero-grid-overlay {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(200,151,58,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,151,58,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 120px 48px 80px;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 80px;
+    align-items: center;
+    width: 100%;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(200,151,58,0.15);
+    border: 1px solid rgba(200,151,58,0.4);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gold-light);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.3); }
+  }
+  h1.hero-title {
+    font-family: var(--serif);
+    font-size: clamp(42px, 5.5vw, 72px);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  h1.hero-title em {
+    font-style: normal;
+    color: var(--gold);
+  }
+  .hero-subtitle {
+    font-size: 18px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.65);
+    margin: 20px 0 36px;
+    max-width: 520px;
+    font-weight: 300;
+  }
+  .hero-ctas {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    margin-bottom: 52px;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--navy);
+    padding: 16px 32px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--white);
+    padding: 16px 32px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.3);
+    font-size: 15px;
+    font-weight: 400;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: border-color 0.2s, background 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-secondary:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06); }
+  .hero-stats {
+    display: flex; gap: 40px;
+  }
+  .hero-stat .num {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .hero-stat .label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .hero-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(200,151,58,0.25);
+    border-radius: 12px;
+    padding: 32px;
+    backdrop-filter: blur(8px);
+  }
+  .hero-card h3 {
+    font-family: var(--serif);
+    font-size: 20px;
+    color: var(--white);
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+  .pathway-steps {
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .pathway-step {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    cursor: pointer;
+    transition: background 0.15s;
+    border-radius: 6px;
+    padding: 12px 10px;
+    margin: 0 -10px;
+  }
+  .pathway-step:last-child { border-bottom: none; }
+  .pathway-step:hover { background: rgba(200,151,58,0.07); }
+  .step-badge {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    background: rgba(200,151,58,0.2);
+    border: 1px solid rgba(200,151,58,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+  .step-info .step-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 2px;
+  }
+  .step-info .step-desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+  }
+  .step-arrow { margin-left: auto; color: var(--gold); opacity: 0.5; font-size: 14px; align-self: center; }
+
+  /* ── TRUST BAR ── */
+  .trust-bar {
+    background: var(--navy-mid);
+    border-top: 1px solid rgba(200,151,58,0.2);
+    border-bottom: 1px solid rgba(200,151,58,0.2);
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+  .trust-item {
+    display: flex; align-items: center; gap: 10px;
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    font-weight: 400;
+  }
+  .trust-item .badge-dot {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .trust-divider {
+    width: 1px; height: 20px;
+    background: rgba(255,255,255,0.12);
+  }
+
+  /* ── SECTION DEFAULTS ── */
+  section { padding: 100px 48px; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  h2.section-title {
+    font-family: var(--serif);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--text-dark);
+    margin-bottom: 16px;
+  }
+  h2.section-title.light { color: var(--white); }
+  .section-body {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--text-body);
+    max-width: 560px;
+    font-weight: 300;
+  }
+  .section-body.light { color: rgba(255,255,255,0.6); }
+
+  /* ── PROGRAMS ── */
+  .programs-section { background: var(--off-white); }
+  .programs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 52px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .programs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .program-card {
+    background: var(--white);
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.25s;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+  }
+  .program-card:hover { background: var(--navy); }
+  .program-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .program-card:hover::before { transform: scaleX(1); }
+  .program-icon {
+    width: 48px; height: 48px;
+    background: var(--gold-pale);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    transition: background 0.25s;
+    font-size: 22px;
+  }
+  .program-card:hover .program-icon { background: rgba(200,151,58,0.2); }
+  .program-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .program-name {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    line-height: 1.25;
+    transition: color 0.25s;
+  }
+  .program-card:hover .program-name { color: var(--white); }
+  .program-desc {
+    font-size: 14px;
+    color: var(--gray-mid);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    transition: color 0.25s;
+  }
+  .program-card:hover .program-desc { color: rgba(255,255,255,0.55); }
+  .program-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+    display: flex; align-items: center; gap: 6px;
+    letter-spacing: 0.04em;
+  }
+  .program-link::after { content: '→'; transition: transform 0.2s; }
+  .program-card:hover .program-link::after { transform: translateX(4px); }
+
+  /* ── WHY SECTION ── */
+  .why-section { background: var(--navy); }
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .why-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 48px;
+  }
+  .why-feature {
+    padding: 24px;
+    border: 1px solid rgba(200,151,58,0.15);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.03);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .why-feature:hover {
+    border-color: rgba(200,151,58,0.4);
+    background: rgba(200,151,58,0.05);
+  }
+  .why-feature .feat-icon { font-size: 24px; margin-bottom: 12px; }
+  .why-feature .feat-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .why-feature .feat-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.6;
+  }
+  .why-image-stack {
+    position: relative;
+    height: 520px;
+  }
+  .why-img-main {
+    position: absolute;
+    top: 0; left: 0; right: 40px; bottom: 40px;
+    background: url('https://wingmanacademies.com/wp-content/uploads/2026/03/DSCF5062-3-scaled.jpeg') center/cover;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .why-img-accent {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 220px; height: 180px;
+    background: url('https://wingmanacademies.com/wp-content/uploads/2026/03/PHOTO-2026-02-24-14-08-29.jpeg') center/cover;
+    border-radius: 8px;
+    border: 4px solid var(--navy);
+  }
+  .why-img-badge {
+    position: absolute;
+    top: 24px; right: 60px;
+    background: var(--gold);
+    color: var(--navy);
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  /* ── PATHWAY ── */
+  .pathway-section { background: var(--off-white); }
+  .pathway-header { text-align: center; margin-bottom: 60px; }
+  .pathway-header .section-body { margin: 0 auto; text-align: center; }
+  .pathway-track {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    position: relative;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .pathway-track::before {
+    content: '';
+    position: absolute;
+    top: 52px;
+    left: 60px; right: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), rgba(200,151,58,0.3));
+  }
+  .pway-step {
+    flex: 1;
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 16px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .pway-step:hover { transform: translateY(-4px); }
+  .pway-bubble {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2px solid var(--gray-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--gray-mid);
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+  }
+  .pway-step.active .pway-bubble,
+  .pway-step:hover .pway-bubble {
+    background: var(--navy);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .pway-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+  }
+  .pway-detail {
+    font-size: 12px;
+    color: var(--gray-mid);
+    line-height: 1.5;
+  }
+
+  /* ── FLEET STRIP ── */
+  .fleet-section { background: var(--navy-mid); padding: 80px 48px; }
+  .fleet-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 40px; flex-wrap: wrap; gap: 16px;
+  }
+  .fleet-scroll {
+    display: flex; gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(200,151,58,0.3) transparent;
+  }
+  .fleet-card {
+    min-width: 240px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(200,151,58,0.15);
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+  }
+  .fleet-card:hover { border-color: rgba(200,151,58,0.5); transform: translateY(-2px); }
+  .fleet-card img {
+    width: 100%; height: 150px;
+    object-fit: cover;
+    filter: brightness(0.85);
+    transition: filter 0.25s;
+  }
+  .fleet-card:hover img { filter: brightness(1); }
+  .fleet-card-info { padding: 16px 18px; }
+  .fleet-card-name { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+  .fleet-card-role { font-size: 12px; color: rgba(255,255,255,0.4); }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-section { background: var(--white); }
+  .testimonials-header { margin-bottom: 52px; }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .testimonial-card {
+    background: var(--off-white);
+    border-radius: 10px;
+    padding: 28px;
+    position: relative;
+    border: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .testimonial-card:hover { border-color: rgba(200,151,58,0.35); }
+  .testimonial-quote {
+    font-family: var(--serif);
+    font-size: 64px;
+    line-height: 0.6;
+    color: var(--gold);
+    margin-bottom: 12px;
+    opacity: 0.6;
+  }
+  .testimonial-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-body);
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+  .testimonial-author {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .author-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+  .author-name { font-size: 14px; font-weight: 600; color: var(--text-dark); }
+  .author-loc { font-size: 12px; color: var(--gray-mid); }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+    padding: 100px 48px;
+    text-align: center;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: 50%;
+    transform: translateX(-50%);
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(200,151,58,0.12) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .cta-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+  .cta-inner h2 {
+    font-family: var(--serif);
+    font-size: clamp(36px, 4.5vw, 60px);
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  .cta-inner h2 em { font-style: normal; color: var(--gold); }
+  .cta-inner p {
+    font-size: 17px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.65;
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+  .cta-inner .btn-group { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+  /* ── CONTACT STRIP ── */
+  .contact-strip {
+    background: var(--navy-mid);
+    padding: 52px 48px;
+    border-top: 1px solid rgba(200,151,58,0.2);
+  }
+  .contact-strip-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .contact-location h4 {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .contact-location p { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+  .contact-location a { color: rgba(255,255,255,0.75); text-decoration: none; }
+  .contact-location a:hover { color: var(--gold-light); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy);
+    padding: 40px 48px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer-logo { font-family: var(--serif); font-size: 18px; color: rgba(255,255,255,0.6); font-weight: 700; }
+  .footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 12px; color: rgba(255,255,255,0.4); text-decoration: none; }
+  .footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+  /* ── STICKY BOOK BAR ── */
+  .sticky-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 99;
+    background: var(--navy-mid);
+    border-top: 1px solid rgba(200,151,58,0.3);
+    padding: 14px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    transform: translateY(100%);
+    transition: transform 0.3s;
+  }
+  .sticky-bar.visible { transform: translateY(0); }
+  .sticky-bar-text { font-size: 14px; color: rgba(255,255,255,0.7); font-weight: 300; }
+  .sticky-bar-text strong { color: var(--white); font-weight: 600; }
+  .sticky-bar-ctas { display: flex; gap: 12px; }
+  .sticky-bar-ctas a {
+    padding: 10px 22px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .sticky-bar-ctas .s-primary { background: var(--gold); color: var(--navy); }
+  .sticky-bar-ctas .s-primary:hover { background: var(--gold-light); }
+  .sticky-bar-ctas .s-secondary { border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.75); }
+  .sticky-bar-ctas .s-secondary:hover { border-color: rgba(255,255,255,0.5); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fade-up 0.7s ease forwards; }
+  .fade-up-2 { animation: fade-up 0.7s 0.15s ease both; }
+  .fade-up-3 { animation: fade-up 0.7s 0.3s ease both; }
+  .fade-up-4 { animation: fade-up 0.7s 0.45s ease both; }
+  .fade-up-5 { animation: fade-up 0.7s 0.6s ease both; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 960px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    .hero-content { grid-template-columns: 1fr; gap: 48px; padding: 100px 24px 60px; }
+    .hero-card { display: none; }
+    section { padding: 70px 24px; }
+    .trust-bar { gap: 24px; padding: 20px 24px; }
+    .programs-grid { grid-template-columns: 1fr; }
+    .why-grid { grid-template-columns: 1fr; }
+    .why-image-stack { height: 300px; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .contact-strip-inner { grid-template-columns: 1fr; }
+    .fleet-section { padding: 70px 24px; }
+    .cta-section { padding: 80px 24px; }
+    .contact-strip { padding: 52px 24px; }
+    footer { padding: 32px 24px; }
+    .footer-inner { flex-direction: column; text-align: center; }
+    .sticky-bar { padding: 14px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="wing-icon"></div>
+    Wingman Academies
+  </a>
+  <ul class="nav-links">
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#pathway">Pathway</a></li>
+    <li><a href="#fleet">Fleet</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="https://wingmanacademies.com/trial-introductory-flight/" class="nav-cta">Book Trial Flight</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-overlay"></div>
+  <div class="hero-content">
+    <div>
+      <div class="hero-badge fade-up">CASA Approved · Part 141/142 · IATA Authorised</div>
+      <h1 class="hero-title fade-up-2">
+        Your <em>Airline Career</em><br>Starts Here
+      </h1>
+      <p class="hero-subtitle fade-up-3">
+        Train with experienced airline pilots at Jandakot Airport, Perth. From your first trial flight to a Commercial Pilot Licence — we build professionals, not just pilots.
+      </p>
+      <div class="hero-ctas fade-up-4">
+        <a href="https://wingmanacademies.com/trial-introductory-flight/" class="btn-primary">
+          ✈ Book a Trial Flight
+        </a>
+        <a href="https://wingmanacademies.com/ground-theory-courses/" class="btn-secondary">
+          Start with Ground Theory
+        </a>
+      </div>
+      <div class="hero-stats fade-up-5">
+        <div class="hero-stat">
+          <div class="num">7</div>
+          <div class="label">Aircraft Fleet</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">3</div>
+          <div class="label">Global Offices</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">100%</div>
+          <div class="label">Airline Standards</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-card fade-up-3">
+      <h3>Training Pathway</h3>
+      <div class="pathway-steps">
+        <a href="https://wingmanacademies.com/trial-introductory-flight/" class="pathway-step" style="text-decoration:none">
+          <div class="step-badge">TIF</div>
+          <div class="step-info">
+            <div class="step-title">Trial Introductory Flight</div>
+            <div class="step-desc">Experience the controls — no experience needed</div>
+          </div>
+          <div class="step-arrow">›</div>
+        </a>
+        <a href="https://wingmanacademies.com/home/recreational-pilot-licence/" class="pathway-step" style="text-decoration:none">
+          <div class="step-badge">RPL</div>
+          <div class="step-info">
+            <div class="step-title">Recreational Pilot Licence</div>
+            <div class="step-desc">Your first official pilot certificate</div>
+          </div>
+          <div class="step-arrow">›</div>
+        </a>
+        <a href="https://wingmanacademies.com/ppl-perth/" class="pathway-step" style="text-decoration:none">
+          <div class="step-badge">PPL</div>
+          <div class="step-info">
+            <div class="step-title">Private Pilot Licence</div>
+            <div class="step-desc">Fly passengers, cross-country navigation</div>
+          </div>
+          <div class="step-arrow">›</div>
+        </a>
+        <a href="https://wingmanacademies.com/commerical-pilot-licence/" class="pathway-step" style="text-decoration:none">
+          <div class="step-badge">CPL</div>
+          <div class="step-info">
+            <div class="step-title">Commercial Pilot Licence</div>
+            <div class="step-desc">Fly professionally — the airline pathway</div>
+          </div>
+          <div class="step-arrow">›</div>
+        </a>
+        <a href="https://wingmanacademies.com/mcc-pert/" class="pathway-step" style="text-decoration:none">
+          <div class="step-badge">MCC</div>
+          <div class="step-info">
+            <div class="step-title">Multi Crew Cooperation</div>
+            <div class="step-desc">Airline crew teamwork — final step</div>
+          </div>
+          <div class="step-arrow">›</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item"><div class="badge-dot"></div> CASA Approved Part 141/142 Flight School</div>
+  <div class="trust-divider"></div>
+  <div class="trust-item"><div class="badge-dot"></div> IATA Authorised Training Centre</div>
+  <div class="trust-divider"></div>
+  <div class="trust-item"><div class="badge-dot"></div> Based at Jandakot Airport, Perth</div>
+  <div class="trust-divider"></div>
+  <div class="trust-item"><div class="badge-dot"></div> Students from HK, Singapore, China & Australia</div>
+</div>
+
+<!-- PROGRAMS -->
+<section class="programs-section" id="programs">
+  <div class="section-inner">
+    <div class="programs-header">
+      <div>
+        <div class="section-label">Flight Programs</div>
+        <h2 class="section-title">Every Stage of<br>Your Journey</h2>
+      </div>
+      <p class="section-body">Not sure where to start? We recommend the Trial Introductory Flight — you'll take the controls within minutes.</p>
+    </div>
+    <div class="programs-grid">
+      <a href="https://wingmanacademies.com/trial-introductory-flight/" class="program-card">
+        <div class="program-icon">🛩️</div>
+        <div class="program-tag">Beginner</div>
+        <h3 class="program-name">Try Flying</h3>
+        <p class="program-desc">Take the controls of a real aircraft with a qualified instructor. No experience required — just curiosity.</p>
+        <div class="program-link">Book Now</div>
+      </a>
+      <a href="https://wingmanacademies.com/home/recreational-pilot-licence/" class="program-card">
+        <div class="program-icon">📋</div>
+        <div class="program-tag">Foundation</div>
+        <h3 class="program-name">RPL / PPL Training</h3>
+        <p class="program-desc">Structured ab-initio training from your first solo flight through to private pilot certification.</p>
+        <div class="program-link">Learn More</div>
+      </a>
+      <a href="https://wingmanacademies.com/commerical-pilot-licence/" class="program-card">
+        <div class="program-icon">✈️</div>
+        <div class="program-tag">Professional</div>
+        <h3 class="program-name">Commercial Pilot Licence</h3>
+        <p class="program-desc">Full CPL pathway designed by airline pilots. Includes MECIR and MCC for airline-readiness.</p>
+        <div class="program-link">View CPL Program</div>
+      </a>
+      <a href="https://wingmanacademies.com/airline-pilot-preparation-app-hong-kong-page/" class="program-card">
+        <div class="program-icon">🏢</div>
+        <div class="program-tag">Career</div>
+        <h3 class="program-name">Airline Pilot Preparation</h3>
+        <p class="program-desc">Interview prep, airline knowledge and professional development for aspiring airline cadets.</p>
+        <div class="program-link">Learn More</div>
+      </a>
+      <a href="https://wingmanacademies.com/ground-theory-courses/" class="program-card">
+        <div class="program-icon">📚</div>
+        <div class="program-tag">Theory</div>
+        <h3 class="program-name">Ground Theory Courses</h3>
+        <p class="program-desc">RPL, PPL and CPL theory covering aerodynamics, navigation, meteorology and aviation law.</p>
+        <div class="program-link">View Courses</div>
+      </a>
+      <a href="https://wingmanacademies.com/simulator/" class="program-card">
+        <div class="program-icon">🖥️</div>
+        <div class="program-tag">Advanced</div>
+        <h3 class="program-name">Simulator Training</h3>
+        <p class="program-desc">Train for complex scenarios in our full-motion simulator — the same technology used by major airlines.</p>
+        <div class="program-link">View Simulator</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY WINGMAN -->
+<section class="why-section" id="about">
+  <div class="section-inner">
+    <div class="why-grid">
+      <div>
+        <div class="section-label">Why Wingman</div>
+        <h2 class="section-title light">We Don't Just Teach<br><em style="color:var(--gold);font-style:normal;">Flying</em>. We Build Careers.</h2>
+        <p class="section-body light">
+          Wingman Academies is built by airline pilots, for aspiring airline pilots. Every program is designed to meet the standards you'll face in the real cockpit — not just pass exams.
+        </p>
+        <div class="why-features">
+          <div class="why-feature">
+            <div class="feat-icon">🎓</div>
+            <div class="feat-title">Airline-Designed Curriculum</div>
+            <div class="feat-desc">Programs created by active airline captains who know exactly what employers look for.</div>
+          </div>
+          <div class="why-feature">
+            <div class="feat-icon">🌏</div>
+            <div class="feat-title">International Students Welcome</div>
+            <div class="feat-desc">Dedicated support for students from Hong Kong, Singapore, China and beyond.</div>
+          </div>
+          <div class="why-feature">
+            <div class="feat-icon">🛡️</div>
+            <div class="feat-title">CASA & IATA Approved</div>
+            <div class="feat-desc">Our qualifications are recognised globally. Your licence travels with your career.</div>
+          </div>
+          <div class="why-feature">
+            <div class="feat-icon">📡</div>
+            <div class="feat-title">Modern Fleet & Simulators</div>
+            <div class="feat-desc">From Cessna 150s to Beechcraft Barons — real-world training on a diverse fleet.</div>
+          </div>
+        </div>
+      </div>
+      <div class="why-image-stack">
+        <div class="why-img-main"></div>
+        <div class="why-img-accent"></div>
+        <div class="why-img-badge">CASA Approved<br>Part 141/142</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRAINING PATHWAY -->
+<section class="pathway-section" id="pathway">
+  <div class="section-inner">
+    <div class="pathway-header">
+      <div class="section-label" style="text-align:center">Training Pathway</div>
+      <h2 class="section-title" style="text-align:center">Your Roadmap to<br>the Flight Deck</h2>
+      <p class="section-body">From curious beginner to professional pilot — every step is structured, supported and recognised by airlines worldwide.</p>
+    </div>
+    <div class="pathway-track">
+      <div class="pway-step active">
+        <div class="pway-bubble">TIF</div>
+        <div class="pway-name">Trial Flight</div>
+        <div class="pway-detail">Take the controls. Discover aviation.</div>
+      </div>
+      <div class="pway-step">
+        <div class="pway-bubble">RPL</div>
+        <div class="pway-name">Recreational Pilot</div>
+        <div class="pway-detail">First licence. Local flight authority.</div>
+      </div>
+      <div class="pway-step">
+        <div class="pway-bubble">PPL</div>
+        <div class="pway-name">Private Pilot</div>
+        <div class="pway-detail">Passengers. Cross-country. IFR start.</div>
+      </div>
+      <div class="pway-step">
+        <div class="pway-bubble">CPL</div>
+        <div class="pway-name">Commercial Pilot</div>
+        <div class="pway-detail">Professional licence. Paid flying.</div>
+      </div>
+      <div class="pway-step">
+        <div class="pway-bubble">MECIR</div>
+        <div class="pway-name">Multi-Engine IR</div>
+        <div class="pway-detail">Complex aircraft. IFR proficiency.</div>
+      </div>
+      <div class="pway-step">
+        <div class="pway-bubble">MCC</div>
+        <div class="pway-name">Multi-Crew Coop</div>
+        <div class="pway-detail">Airline crew skills. Final step.</div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:48px;">
+      <a href="https://wingmanacademies.com/contact/" class="btn-primary" style="background:var(--navy); color:var(--white);">
+        Plan My Training Pathway →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FLEET -->
+<section class="fleet-section" id="fleet">
+  <div class="section-inner">
+    <div class="fleet-header">
+      <div>
+        <div class="section-label" style="color:var(--gold)">Our Fleet</div>
+        <h2 class="section-title light" style="margin:0">7 Aircraft. Every Stage Covered.</h2>
+      </div>
+      <a href="https://wingmanacademies.com/our-fleets/" class="btn-secondary" style="white-space:nowrap">View Full Fleet →</a>
+    </div>
+    <div class="fleet-scroll">
+      <a href="https://wingmanacademies.com/our-fleets-c150/" class="fleet-card">
+        <img src="https://wingmanacademies.com/wp-content/uploads/2026/02/Rectangle-35.jpg" alt="Cessna C150">
+        <div class="fleet-card-info">
+          <div class="fleet-card-name">Cessna C150</div>
+          <div class="fleet-card-role">RPL / Early PPL Training</div>
+        </div>
+      </a>
+      <a href="https://wingmanacademies.com/our-fleets-c172/" class="fleet-card">
+        <img src="https://wingmanacademies.com/wp-content/uploads/2026/02/Rectangle-35-1.jpg" alt="Cessna C172 Skyhawk">
+        <div class="fleet-card-info">
+          <div class="fleet-card-name">Cessna C172 Skyhawk</div>
+          <div class="fleet-card-role">PPL / CPL Training</div>
+        </div>
+      </a>
+      <a href="https://wingmanacademies.com/our-fleets-r2160/" class="fleet-card">
+        <img src="https://wingmanacademies.com/wp-content/uploads/2026/02/Rectangle-35.png" alt="Alpha R2160 Robin">
+        <div class="fleet-card-info">
+          <div class="fleet-card-name">Alpha R2160 Robin</div>
+          <div class="fleet-card-role">Aerobatics Training</div>
+        </div>
+      </a>
+      <a href="https://wingmanacademies.com/our-fleets-pa28/" class="fleet-card">
+        <img src="https://wingmanacademies.com/wp-content/uploads/2026/02/Rectangle-35asaa.jpg" alt="Piper PA-28 Warrior">
+        <div class="fleet-card-info">
+          <div class="fleet-card-name">Piper PA-28 Warrior</div>
+          <div class="fleet-card-role">PPL / Cross-country</div>
+        </div>
+      </a>
+      <a href="https://wingmanacademies.com/our-fleets-c210/" class="fleet-card">
+        <img src="https://wingmanacademies.com/wp-content/uploads/2026/02/Rectangle-35-1.png" alt="Cessna C210 Centurion">
+        <div class="fleet-card-info">
+          <div class="fleet-card-name">Cessna C210 Centurion</div>
+          <div class="fleet-card-role">CPL / Complex Rating</div>
+        </div>
+      </a>
+      <a href="https://wingmanacademies.com/our-fleets-be58/" class="fleet-card">
+        <img src="https://wingmanacademies.com/wp-content/uploads/2026/02/Rectangle-35-2.png" alt="Beechcraft BE58 Baron">
+        <div class="fleet-card-info">
+          <div class="fleet-card-name">Beechcraft BE58 Baron</div>
+          <div class="fleet-card-role">Multi-Engine Training</div>
+        </div>
+      </a>
+      <a href="https://wingmanacademies.com/our-fleets-be76/" class="fleet-card">
+        <img src="https://wingmanacademies.com/wp-content/uploads/2026/02/Rectangle-35-4.png" alt="Beechcraft BE76 Duchess">
+        <div class="fleet-card-info">
+          <div class="fleet-card-name">Beechcraft BE76 Duchess</div>
+          <div class="fleet-card-role">MECIR / Advanced</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="section-inner">
+    <div class="testimonials-header">
+      <div class="section-label">Student Stories</div>
+      <h2 class="section-title">Trusted by Pilots<br>Around the World</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">The airline preparation and MCC training felt exactly like a real flight deck. It gave me the confidence I needed going into cadet assessments.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">DL</div>
+          <div>
+            <div class="author-name">Daniel Law</div>
+            <div class="author-loc">Hong Kong</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">The immersive simulation was invaluable. Training in a realistic environment made me feel fully prepared for my aviation career.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">UT</div>
+          <div>
+            <div class="author-name">Ulrica Teo</div>
+            <div class="author-loc">Singapore</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">I had no aviation background at all, and Wingman made everything easy to understand. The ground course gave me real confidence.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">LC</div>
+          <div>
+            <div class="author-name">Lara Coke</div>
+            <div class="author-loc">Perth, Australia</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">What stood out was the focus on airline standards. It's not just about flying — it's about thinking like a professional pilot.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">AE</div>
+          <div>
+            <div class="author-name">Ash Ewens</div>
+            <div class="author-loc">Perth, Australia</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Participating in the training was a game changer. The hands-on experience and expert guidance gave me a real foothold in the industry.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">AF</div>
+          <div>
+            <div class="author-name">Andrew Fewster</div>
+            <div class="author-loc">Perth, Australia</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">I am now equipped with the skills to excel in aviation. The instructors were supportive and the curriculum was truly comprehensive.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">LC</div>
+          <div>
+            <div class="author-name">Lisa Chen</div>
+            <div class="author-loc">Shanghai, China</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <div class="section-label" style="justify-content:center;display:flex">Ready to Fly?</div>
+    <h2>Take the First Step<br>Toward Your <em>Wings</em></h2>
+    <p>Book a Trial Introductory Flight and discover what it feels like to be a pilot. No experience needed — just the curiosity to start.</p>
+    <div class="btn-group">
+      <a href="https://wingmanacademies.com/trial-introductory-flight/" class="btn-primary">✈ Book Trial Flight</a>
+      <a href="https://wingmanacademies.com/contact/" class="btn-secondary">Talk to an Advisor</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT STRIP -->
+<div class="contact-strip" id="contact">
+  <div class="contact-strip-inner">
+    <div class="contact-location">
+      <h4>🇦🇺 Perth, Australia — HQ</h4>
+      <p>
+        Building A, 631 Karel Avenue<br>
+        Jandakot, WA 6164<br><br>
+        <a href="tel:+61405339439">(+61) 405 339 439</a><br>
+        <a href="mailto:perth@wingmanacademies.com">perth@wingmanacademies.com</a>
+      </p>
+    </div>
+    <div class="contact-location">
+      <h4>🇭🇰 Hong Kong</h4>
+      <p>
+        Airline Pilot Preparation<br>
+        ICAO English Programs<br><br>
+        <a href="tel:+85267689394">(+852) 6768 9394</a><br>
+        <a href="mailto:info@wingmanacademies.com">info@wingmanacademies.com</a>
+      </p>
+    </div>
+    <div class="contact-location">
+      <h4>🇸🇬 Singapore</h4>
+      <p>
+        Career Preparation Programs<br>
+        Pilot Aptitude Training<br><br>
+        <a href="tel:+6583948486">(+65) 8394 8486</a><br>
+        <a href="mailto:singapore@wingmanacademies.com">singapore@wingmanacademies.com</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Wingman Academies</div>
+    <div class="footer-links">
+      <a href="https://wingmanacademies.com/credentials/">Credentials</a>
+      <a href="https://wingmanacademies.com/facilities/">Facilities</a>
+      <a href="https://wingmanacademies.com/our-fleets/">Fleet</a>
+      <a href="https://wingmanacademies.com/contact/">Contact</a>
+    </div>
+    <div class="footer-copy">© 2026 Wingman Academies. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- STICKY BAR -->
+<div class="sticky-bar" id="sticky-bar">
+  <div class="sticky-bar-text"><strong>Ready to fly?</strong> Book a Trial Introductory Flight — no experience needed.</div>
+  <div class="sticky-bar-ctas">
+    <a href="https://wingmanacademies.com/trial-introductory-flight/" class="s-primary">Book Trial Flight</a>
+    <a href="https://wingmanacademies.com/contact/" class="s-secondary">Contact Us</a>
+  </div>
+</div>
+
+<script>
+  // Sticky bar on scroll
+  const stickyBar = document.getElementById('sticky-bar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 500) {
+      stickyBar.classList.add('visible');
+    } else {
+      stickyBar.classList.remove('visible');
+    }
+  });
+
+  // Pathway active state
+  document.querySelectorAll('.pway-step').forEach(step => {
+    step.addEventListener('click', () => {
+      document.querySelectorAll('.pway-step').forEach(s => s.classList.remove('active'));
+      step.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
