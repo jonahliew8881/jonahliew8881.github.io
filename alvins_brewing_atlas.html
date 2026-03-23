@@ -1,0 +1,2804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alvin's Brewing Atlas</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f4f8;
+    --bg2: #e6edf5;
+    --ink: #0d1b2a;
+    --navy: #0a2540;
+    --cobalt: #1a4a7a;
+    --blue: #2563a8;
+    --sky: #4a9fd4;
+    --accent: #38bdf8;
+    --accent2: #0ea5e9;
+    --muted: #5e7a96;
+    --border: #c5d8ed;
+    --card: #ffffff;
+    --pane: #e8f0fa;
+    --gold: #f0b429;
+    --highlight: #bfdbfe;
+    --light-border: #ddeaf6;
+    --sidebar-text: rgba(220,235,255,0.85);
+    --sidebar-sub: rgba(180,210,245,0.55);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* HEADER */
+  header {
+    padding: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: stretch;
+    height: 80px;
+  }
+
+  /* Left accent bar */
+  .header-accent-bar {
+    width: 4px;
+    background: linear-gradient(to bottom, var(--accent), var(--cobalt));
+    flex-shrink: 0;
+  }
+
+  /* Brand block */
+  .header-brand-block {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    padding: 0 2.5rem;
+    border-right: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .header-monogram {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cobalt), var(--sky));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: white;
+    flex-shrink: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .header-title-group { display: flex; flex-direction: column; gap: 0.18rem; }
+
+  .brand-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.45rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #fff;
+    letter-spacing: 0.01em;
+  }
+
+  .brand-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .brand-eyebrow {
+    font-size: 0.52rem;
+    font-weight: 300;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(180,210,245,0.5);
+  }
+
+  /* Meta pills row */
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0 2rem;
+    flex: 1;
+  }
+
+  .header-meta-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.35rem 1.2rem;
+    border-right: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .header-meta-pill:last-child { border-right: none; }
+
+  .header-meta-icon {
+    font-size: 0.9rem;
+    opacity: 0.6;
+  }
+
+  .header-meta-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.08rem;
+  }
+
+  .header-meta-val {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: rgba(220,235,255,0.9);
+    letter-spacing: 0.02em;
+  }
+
+  .header-meta-label {
+    font-size: 0.5rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(180,210,245,0.45);
+  }
+
+  /* Right version tag */
+  .header-version {
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    border-left: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .version-tag {
+    font-size: 0.52rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(56,189,248,0.45);
+  }
+
+  /* LAYOUT */
+  .app-shell {
+    display: grid;
+    grid-template-columns: 290px 1fr;
+    min-height: calc(100vh - 120px);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: var(--navy);
+    color: var(--sidebar-text);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sidebar::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    border: 50px solid rgba(56,189,248,0.05);
+    pointer-events: none;
+  }
+
+  .sidebar::after {
+    content: '';
+    position: absolute;
+    bottom: 40px; left: -80px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    border: 40px solid rgba(37,99,168,0.08);
+    pointer-events: none;
+  }
+
+  .sidebar-inner {
+    padding: 1.5rem;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(56,189,248,0.2) transparent;
+  }
+
+  .sidebar-section-title {
+    font-size: 0.55rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.65rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid rgba(56,189,248,0.2);
+  }
+
+  .selector-group { display: flex; flex-direction: column; gap: 0.35rem; }
+
+  .selector-pill {
+    display: block;
+    padding: 0.55rem 0.9rem;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 3px;
+    color: var(--sidebar-text);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: left;
+  }
+
+  .selector-pill:hover {
+    background: rgba(56,189,248,0.1);
+    border-color: rgba(56,189,248,0.35);
+    color: #fff;
+  }
+
+  .selector-pill.active {
+    background: var(--blue);
+    border-color: var(--sky);
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .pill-sub {
+    display: block;
+    font-size: 0.58rem;
+    color: var(--sidebar-sub);
+    margin-top: 0.1rem;
+  }
+
+  .selector-pill.active .pill-sub { color: rgba(255,255,255,0.65); }
+
+  /* ROAST METER */
+  .roast-meter { display: flex; gap: 4px; align-items: flex-end; margin-top: 0.5rem; }
+
+  .roast-segment {
+    flex: 1;
+    border-radius: 2px 2px 0 0;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+    opacity: 0.5;
+  }
+
+  .roast-segment:hover { transform: scaleY(1.15); opacity: 0.8; }
+  .roast-segment.selected { opacity: 1; outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .roast-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.55rem;
+    color: var(--sidebar-sub);
+    letter-spacing: 0.05em;
+    margin-top: 0.4rem;
+  }
+
+  #roastDisplay {
+    font-size: 0.63rem;
+    color: var(--accent);
+    margin-top: 0.5rem;
+  }
+
+  /* MAIN */
+  .main-content {
+    padding: 2rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    background: var(--bg);
+  }
+
+  .section-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  /* BREWER TABS */
+  .brewer-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .brewer-tab-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tab-group-label {
+    font-size: 0.52rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .tab-group-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--light-border);
+  }
+
+  .brewer-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--light-border);
+    background: var(--card);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.18s;
+    min-width: 76px;
+    position: relative;
+  }
+
+  .brewer-card:hover {
+    border-color: var(--sky);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(37,99,168,0.12);
+  }
+
+  .brewer-card.active {
+    border-color: var(--blue);
+    background: var(--highlight);
+    box-shadow: 0 0 0 2px var(--blue);
+  }
+
+  .brewer-card.champion-card { border-color: rgba(240,180,41,0.4); background: #fffbf0; }
+  .brewer-card.champion-card:hover { border-color: var(--gold); box-shadow: 0 4px 14px rgba(240,180,41,0.2); }
+  .brewer-card.champion-card.active { border-color: var(--gold); background: #fff8dc; box-shadow: 0 0 0 2px var(--gold); }
+
+  .champion-badge {
+    position: absolute;
+    top: -5px; right: -5px;
+    background: var(--gold);
+    color: #7a5400;
+    font-size: 0.45rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 1px 5px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  .brewer-icon { font-size: 1.4rem; line-height: 1; }
+
+  .brewer-name {
+    font-size: 0.58rem;
+    letter-spacing: 0.04em;
+    text-align: center;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  .brewer-card.champion-card .brewer-name { color: #5c4000; }
+
+  /* RECIPE PANEL */
+  .recipe-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .recipe-card {
+    background: var(--card);
+    border: 1px solid var(--light-border);
+    border-radius: 8px;
+    padding: 1.4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .recipe-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--cobalt), var(--accent));
+  }
+
+  .recipe-card.champion-theme::before {
+    background: linear-gradient(to right, #b8860b, var(--gold));
+  }
+
+  .recipe-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.2rem;
+  }
+
+  .recipe-card-sub {
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  .champion-credit {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    background: #fff8dc;
+    border: 1px solid rgba(240,180,41,0.5);
+    border-radius: 3px;
+    font-size: 0.58rem;
+    color: #7a5400;
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+  }
+
+  .recipe-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+  }
+
+  .stat-item { display: flex; flex-direction: column; gap: 0.15rem; }
+
+  .stat-label {
+    font-size: 0.53rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .stat-value {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--navy);
+    line-height: 1;
+  }
+
+  .stat-unit { font-size: 0.62rem; color: var(--blue); margin-left: 2px; }
+
+  /* WATER CARD */
+  .water-indicators { display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.75rem; }
+
+  .water-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.68rem;
+  }
+
+  .water-bar-wrap {
+    width: 110px;
+    height: 5px;
+    background: var(--pane);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .water-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(to right, var(--cobalt), var(--sky));
+    transition: width 0.5s;
+  }
+
+  /* FLOW CARD */
+  .flow-card {
+    grid-column: 1 / -1;
+    background: var(--card);
+    border: 1px solid var(--light-border);
+    border-radius: 8px;
+    padding: 1.4rem;
+  }
+
+  .flow-title {
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.1rem;
+  }
+
+  .step-col-header {
+    display: grid;
+    grid-template-columns: 50px 1fr 65px 70px 70px;
+    gap: 0.75rem;
+    padding: 0 1rem 0.5rem;
+    font-size: 0.52rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--light-border);
+    margin-bottom: 0.4rem;
+  }
+
+  .step-col-header span:nth-child(3),
+  .step-col-header span:nth-child(4),
+  .step-col-header span:nth-child(5) { text-align: right; }
+
+  .pour-steps { display: flex; flex-direction: column; gap: 0.4rem; }
+
+  .pour-step {
+    display: grid;
+    grid-template-columns: 50px 1fr 65px 70px 70px;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.55rem 1rem;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    transition: background 0.15s;
+  }
+
+  .pour-step:hover { background: var(--pane); }
+
+  .pour-step.active-step {
+    background: rgba(37,99,168,0.08);
+    border-left: 3px solid var(--blue);
+    padding-left: calc(1rem - 3px);
+  }
+
+  .pour-step.done-step { opacity: 0.38; }
+
+  .step-num { font-size: 0.52rem; letter-spacing: 0.08em; color: var(--muted); }
+  .step-name { font-weight: 500; color: var(--navy); }
+  .step-note-small { font-size: 0.56rem; color: var(--muted); font-weight: 300; }
+  .step-time { color: var(--muted); text-align: right; font-size: 0.63rem; }
+  .step-vol { color: var(--blue); text-align: right; font-weight: 500; }
+  .step-total { color: var(--muted); text-align: right; font-size: 0.63rem; }
+
+  /* FLOW BARS */
+  .flow-bars-wrap { position: relative; padding-bottom: 20px; margin-top: 1rem; border-top: 1px solid var(--light-border); padding-top: 0.75rem; }
+
+  .flow-bars { display: flex; gap: 3px; height: 44px; align-items: flex-end; }
+
+  .flow-bar {
+    flex: 1;
+    border-radius: 3px 3px 0 0;
+    position: relative;
+    transition: all 0.3s;
+  }
+
+  .flow-bar-label {
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.46rem;
+    white-space: nowrap;
+    color: var(--muted);
+  }
+
+  /* TIMER + POUR GUIDE */
+  .timer-section {
+    background: var(--navy);
+    border-radius: 8px;
+    padding: 1.4rem 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+  .pour-guide-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    flex-shrink: 0;
+  }
+  .pour-guide-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.46rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(56,189,248,0.55);
+  }
+  .pour-guide-step {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.54rem;
+    color: rgba(56,189,248,0.75);
+    text-align: center;
+    min-height: 1.2em;
+    letter-spacing: 0.05em;
+  }
+  #pourGuideCanvas { display: block; cursor: default; }
+
+  .timer-display {
+    font-family: 'DM Mono', monospace;
+    font-size: 2.8rem;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    min-width: 160px;
+  }
+
+  .timer-controls { display: flex; gap: 0.65rem; }
+
+  .timer-btn {
+    padding: 0.55rem 1.3rem;
+    border: none;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+
+  .timer-btn-start { background: var(--blue); color: white; font-weight: 500; }
+  .timer-btn-start:hover { background: var(--sky); }
+  .timer-btn-reset { background: transparent; color: rgba(220,235,255,0.5); border: 1px solid rgba(220,235,255,0.2); }
+  .timer-btn-reset:hover { color: white; border-color: rgba(220,235,255,0.5); }
+
+  .timer-info { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+
+  .timer-next { font-size: 0.63rem; color: rgba(220,235,255,0.5); }
+  .timer-next strong { color: var(--accent); font-weight: 500; }
+
+  .timer-progress { width: 100%; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+  .timer-progress-fill { height: 100%; background: linear-gradient(to right, var(--cobalt), var(--accent)); border-radius: 2px; transition: width 0.5s linear; }
+
+  /* BOTTOM GRID */
+  .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+
+  /* GRIND CARD */
+  .grind-card {
+    background: var(--card);
+    border: 1px solid var(--light-border);
+    border-radius: 8px;
+    padding: 1.4rem;
+  }
+
+  .grind-visual { display: flex; gap: 3px; align-items: flex-end; height: 32px; margin-top: 0.75rem; }
+
+  .grind-bar {
+    width: 6px;
+    background: var(--blue);
+    border-radius: 1px;
+    opacity: 0.18;
+    transition: all 0.3s;
+  }
+
+  .grind-bar.active { opacity: 1; }
+
+  .grind-label { font-size: 0.6rem; color: var(--muted); margin-top: 0.45rem; letter-spacing: 0.06em; }
+
+  /* GRINDER REFS */
+  .grinder-refs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--light-border);
+  }
+
+  .grinder-ref-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.45rem 0.75rem;
+    background: var(--pane);
+    border-radius: 4px;
+  }
+
+  .grinder-ref-name {
+    font-size: 0.6rem;
+    font-weight: 500;
+    color: var(--navy);
+    letter-spacing: 0.06em;
+  }
+
+  .grinder-ref-name span {
+    display: block;
+    font-size: 0.52rem;
+    font-weight: 300;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .grinder-ref-val {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--blue);
+  }
+
+  .grinder-ref-val span { font-size: 0.58rem; color: var(--muted); margin-left: 2px; }
+
+  /* TASTING */
+  .notes-card {
+    background: var(--pane);
+    border: 1px solid var(--light-border);
+    border-radius: 8px;
+    padding: 1.4rem;
+  }
+
+  .notes-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--navy);
+    margin-bottom: 0.75rem;
+  }
+
+  .tasting-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.85rem; }
+
+  .tasting-tag {
+    padding: 0.28rem 0.7rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 0.62rem;
+    color: var(--cobalt);
+    letter-spacing: 0.04em;
+  }
+
+  .origin-note {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    font-size: 0.77rem;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  /* CHAMPION EXTRA INFO */
+  .champion-context {
+    background: #fffbf0;
+    border: 1px solid rgba(240,180,41,0.3);
+    border-radius: 6px;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.67rem;
+    color: #5c4000;
+    line-height: 1.7;
+    margin-top: 0.5rem;
+  }
+
+  .champion-context strong { color: #7a5400; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .animate-in { animation: fadeIn 0.3s ease forwards; }
+
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.45; } }
+
+  /* ============================================================
+     TABLET — 960px
+  ============================================================ */
+  @media (max-width: 960px) {
+    .header-inner { height: auto; flex-wrap: wrap; }
+    .header-meta { flex-wrap: wrap; padding: 0.5rem 1rem; }
+    .header-meta-pill { padding: 0.3rem 0.75rem; }
+    .header-version { display: none; }
+    .app-shell { grid-template-columns: 1fr; }
+    .main-content { padding: 1.25rem; }
+    .recipe-panel { grid-template-columns: 1fr; }
+    .flow-card { grid-column: 1; }
+    .bottom-grid { grid-template-columns: 1fr; }
+    .timer-section { flex-direction: column; gap: 1rem; }
+    .pour-guide-wrap { align-self: center; }
+    .brand-title { font-size: 1.2rem; }
+  }
+
+  /* ============================================================
+     IPHONE — 480px and below
+     Layout: sidebar hidden, replaced by sticky tab strips at top
+  ============================================================ */
+  @media (max-width: 480px) {
+
+    /* --- Header --- */
+    .header-inner {
+      height: 52px;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+    .header-accent-bar { width: 3px; }
+    .header-brand-block {
+      padding: 0 1rem;
+      gap: 0.75rem;
+      flex: 1;
+      min-width: 0;
+      border-right: none;
+    }
+    .header-monogram { width: 30px; height: 30px; font-size: 0.85rem; flex-shrink: 0; }
+    .brand-eyebrow { display: none; }
+    .brand-title { font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .header-meta { display: none; }
+    .header-version { display: none; }
+
+    /* --- App shell: full single column, sidebar hidden --- */
+    .app-shell { display: block; }
+    .sidebar { display: none; }
+
+    /* --- Mobile tab strip wrapper — sticky below header --- */
+    .mobile-strips {
+      display: flex !important;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--navy);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 2px 12px rgba(10,37,64,0.25);
+    }
+
+    /* Strip row shared styles */
+    .mobile-strip {
+      display: flex;
+      overflow-x: auto;
+      gap: 0;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .mobile-strip:last-child { border-bottom: none; }
+    .mobile-strip::-webkit-scrollbar { display: none; }
+
+    /* Strip section label */
+    .strip-label {
+      font-size: 0.48rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(56,189,248,0.6);
+      padding: 0.45rem 0.9rem 0;
+      white-space: nowrap;
+      flex-shrink: 0;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 0;
+    }
+
+    /* Origin tab chips */
+    .mobile-origin-chip {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      padding: 0.55rem 0.85rem;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: rgba(180,210,245,0.6);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      white-space: nowrap;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s;
+      text-align: left;
+      min-height: 44px;
+      -webkit-tap-highlight-color: transparent;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .mobile-origin-chip:active { background: rgba(56,189,248,0.08); }
+    .mobile-origin-chip.active {
+      color: #fff;
+      border-bottom-color: var(--accent);
+      background: rgba(56,189,248,0.07);
+    }
+    .mobile-origin-chip-flag { font-size: 0.8rem; line-height: 1; }
+    .mobile-origin-chip-name { font-size: 0.62rem; font-weight: 500; line-height: 1.2; }
+    .mobile-origin-chip-sub { font-size: 0.5rem; color: rgba(180,210,245,0.45); line-height: 1; }
+    .mobile-origin-chip.active .mobile-origin-chip-sub { color: rgba(180,210,245,0.7); }
+
+    /* Roast strip */
+    .mobile-roast-strip {
+      display: flex;
+      align-items: center;
+      padding: 0.3rem 0.5rem;
+      gap: 0.25rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .mobile-roast-strip::-webkit-scrollbar { display: none; }
+
+    .mobile-roast-chip {
+      padding: 0.35rem 0.8rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: transparent;
+      color: rgba(180,210,245,0.55);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      white-space: nowrap;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mobile-roast-chip:active { transform: scale(0.96); }
+    .mobile-roast-chip.active {
+      background: var(--blue);
+      border-color: var(--sky);
+      color: #fff;
+    }
+
+    /* Strip divider label */
+    .strip-divider {
+      font-size: 0.46rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(56,189,248,0.4);
+      padding: 0 0.6rem;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    /* --- Main content --- */
+    .main-content {
+      padding: 0.9rem 0.85rem;
+      gap: 1rem;
+    }
+
+    /* --- Section labels --- */
+    .section-label { font-size: 0.54rem; }
+    .tab-group-label { font-size: 0.49rem; }
+
+    /* --- Brewer cards: horizontal scroll strips --- */
+    .brewer-tabs { gap: 0.55rem; }
+    .brewer-tab-group {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 0.45rem;
+      padding-bottom: 0.3rem;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .brewer-tab-group::-webkit-scrollbar { display: none; }
+    .brewer-card {
+      min-width: 64px;
+      flex-shrink: 0;
+      padding: 0.65rem 0.7rem;
+      min-height: 64px;
+    }
+    .brewer-icon { font-size: 1.2rem; }
+    .brewer-name { font-size: 0.53rem; }
+    .champion-badge { font-size: 0.38rem; padding: 1px 4px; }
+
+    /* --- Recipe panel: single col --- */
+    .recipe-panel { grid-template-columns: 1fr; gap: 0.85rem; }
+    .flow-card { grid-column: 1; }
+
+    /* --- Recipe card stats: 3-col --- */
+    .recipe-stats { grid-template-columns: repeat(3, 1fr); gap: 0.55rem; }
+    .stat-value { font-size: 1.1rem; }
+    .stat-label { font-size: 0.47rem; }
+    .recipe-card { padding: 1.1rem; }
+    .recipe-card-title { font-size: 0.95rem; }
+    .recipe-card-sub { font-size: 0.53rem; margin-bottom: 0.85rem; }
+
+    /* --- Pour steps: 4-col (drop Total) --- */
+    .step-col-header {
+      grid-template-columns: 26px 1fr 50px 54px;
+      font-size: 0.46rem;
+      padding: 0 0.55rem 0.4rem;
+      gap: 0.45rem;
+    }
+    .step-col-header span:nth-child(5) { display: none; }
+    .pour-step {
+      grid-template-columns: 26px 1fr 50px 54px;
+      font-size: 0.61rem;
+      padding: 0.5rem 0.55rem;
+      gap: 0.45rem;
+    }
+    .pour-step > span:nth-child(5) { display: none; }
+    .step-note-small { font-size: 0.5rem; }
+    .flow-card { padding: 1.1rem; }
+
+    /* --- Flow bars --- */
+    .flow-bars { height: 34px; }
+    .flow-bar-label { font-size: 0.41rem; }
+
+    /* --- Timer: full-width, one-thumb --- */
+    .timer-section {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.85rem;
+      padding: 1.2rem 1rem;
+      border-radius: 12px;
+    }
+    .pour-guide-wrap {
+      align-self: center;
+      order: -1;
+    }
+    #pourGuideCanvas { width: 130px !important; height: 130px !important; }
+    .timer-display {
+      font-size: 4rem;
+      text-align: center;
+      min-width: unset;
+      letter-spacing: 0.1em;
+      line-height: 1;
+    }
+    .timer-controls {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 0.6rem;
+    }
+    .timer-btn {
+      padding: 0.9rem 0;
+      font-size: 0.72rem;
+      border-radius: 10px;
+      text-align: center;
+      min-height: 52px;
+      letter-spacing: 0.12em;
+    }
+    .timer-btn-start { border-radius: 10px; }
+    .timer-next { font-size: 0.6rem; text-align: center; line-height: 1.6; }
+    .timer-progress { height: 5px; border-radius: 3px; }
+
+    /* --- Bottom grid: single col --- */
+    .bottom-grid { grid-template-columns: 1fr; gap: 0.85rem; }
+
+    /* --- Grind card --- */
+    .grind-card { padding: 1.1rem; }
+    .grind-label { font-size: 0.57rem; }
+    .grinder-ref-row {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.55rem 0.75rem;
+    }
+    .grinder-ref-val { font-size: 1rem; }
+    .grinder-ref-name { font-size: 0.58rem; }
+
+    /* --- Tasting notes --- */
+    .notes-card { padding: 1.1rem; }
+    .notes-title { font-size: 0.9rem; margin-bottom: 0.6rem; }
+    .tasting-tag { font-size: 0.59rem; padding: 0.28rem 0.65rem; min-height: 28px; }
+    .origin-note { font-size: 0.73rem; line-height: 1.7; }
+
+    /* --- Champion extras --- */
+    .champion-context { font-size: 0.61rem; padding: 0.75rem 0.85rem; line-height: 1.65; }
+    .champion-credit { font-size: 0.53rem; padding: 0.22rem 0.55rem; }
+
+    /* --- Water card --- */
+    .water-row { font-size: 0.61rem; }
+    .water-bar-wrap { width: 75px; }
+  }
+
+  /* Safe area — iPhone notch + home indicator */
+  @supports (padding: env(safe-area-inset-bottom)) {
+    @media (max-width: 480px) {
+      .main-content { padding-bottom: calc(1.2rem + env(safe-area-inset-bottom)); }
+      .mobile-strips { padding-top: env(safe-area-inset-top); }
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-accent-bar"></div>
+    <div class="header-brand-block">
+      <div class="header-monogram">A</div>
+      <div class="header-title-group">
+        <span class="brand-eyebrow">Specialty Coffee</span>
+        <h1 class="brand-title">Alvin's Brewing <em>Atlas</em></h1>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div class="header-meta-pill">
+        <span class="header-meta-icon">🌍</span>
+        <div class="header-meta-text">
+          <span class="header-meta-val">20 Origins</span>
+          <span class="header-meta-label">Africa · Americas · Asia</span>
+        </div>
+      </div>
+      <div class="header-meta-pill">
+        <span class="header-meta-icon">☕</span>
+        <div class="header-meta-text">
+          <span class="header-meta-val">8 Brew Methods</span>
+          <span class="header-meta-label">Pour-over · Immersion · Pressure</span>
+        </div>
+      </div>
+      <div class="header-meta-pill">
+        <span class="header-meta-icon">🏆</span>
+        <div class="header-meta-text">
+          <span class="header-meta-val">8 Champion Recipes</span>
+          <span class="header-meta-label">WBrC · JBrC · Expert</span>
+        </div>
+      </div>
+      <div class="header-meta-pill">
+        <span class="header-meta-icon">⚙</span>
+        <div class="header-meta-text">
+          <span class="header-meta-val">Grinder Guide</span>
+          <span class="header-meta-label">Comandante C40 · EK43</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-version">
+      <span class="version-tag">Personal Reference</span>
+    </div>
+  </div>
+</header>
+
+<!-- ========== MOBILE TAB STRIPS (iPhone only, hidden on desktop via CSS) ========== -->
+<div class="mobile-strips" id="mobileStrips" style="display:none;">
+
+  <!-- Row 1: Origins -->
+  <div class="mobile-strip" id="mobileOriginStrip">
+    <!-- populated by JS -->
+  </div>
+
+  <!-- Row 2: Roast level -->
+  <div class="mobile-roast-strip" id="mobileRoastStrip">
+    <span class="strip-divider">Roast</span>
+    <button class="mobile-roast-chip active" data-roast="light">Light</button>
+    <button class="mobile-roast-chip" data-roast="medium-light">Med-Light</button>
+    <button class="mobile-roast-chip" data-roast="medium">Medium</button>
+    <button class="mobile-roast-chip" data-roast="medium-dark">Med-Dark</button>
+    <button class="mobile-roast-chip" data-roast="dark">Dark</button>
+  </div>
+
+</div>
+
+<div class="app-shell">
+
+<!-- ========== SIDEBAR ========== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-inner">
+
+    <!-- ORIGINS -->
+    <div>
+      <div class="sidebar-section-title">Origin & Process</div>
+      <div class="selector-group" id="originGroup">
+
+        <button class="selector-pill active" data-origin="eth-yirga">
+          🇪🇹 Ethiopia — Yirgacheffe
+          <span class="pill-sub">Washed · Bergamot · Jasmine</span>
+        </button>
+        <button class="selector-pill" data-origin="eth-sidama">
+          🇪🇹 Ethiopia — Sidama
+          <span class="pill-sub">Natural · Blueberry · Red Wine</span>
+        </button>
+        <button class="selector-pill" data-origin="eth-guji">
+          🇪🇹 Ethiopia — Guji
+          <span class="pill-sub">Anaerobic Natural · Tropical · Ferment</span>
+        </button>
+        <button class="selector-pill" data-origin="kenya">
+          🇰🇪 Kenya — Kirinyaga
+          <span class="pill-sub">Washed SL28 · Blackcurrant · Tomato</span>
+        </button>
+        <button class="selector-pill" data-origin="colombia-huila">
+          🇨🇴 Colombia — Huila
+          <span class="pill-sub">Washed · Caramel · Red Apple</span>
+        </button>
+        <button class="selector-pill" data-origin="colombia-nar">
+          🇨🇴 Colombia — Nariño
+          <span class="pill-sub">Washed · Citrus · Brown Sugar</span>
+        </button>
+        <button class="selector-pill" data-origin="colombia-geisha">
+          🇨🇴 Colombia — Geisha (Cauca)
+          <span class="pill-sub">Washed Geisha · Floral · Peach</span>
+        </button>
+        <button class="selector-pill" data-origin="costa-rica">
+          🇨🇷 Costa Rica — Tarrazu
+          <span class="pill-sub">Honey · Milk Choc · Tangerine</span>
+        </button>
+        <button class="selector-pill" data-origin="panama">
+          🇵🇦 Panama — Boquete Geisha
+          <span class="pill-sub">Natural Geisha · Jasmine · Mango</span>
+        </button>
+        <button class="selector-pill" data-origin="guatemala">
+          🇬🇹 Guatemala — Huehuetenango
+          <span class="pill-sub">Washed · Dark Chocolate · Plum</span>
+        </button>
+        <button class="selector-pill" data-origin="brazil-sp">
+          🇧🇷 Brazil — São Paulo
+          <span class="pill-sub">Natural · Hazelnut · Dark Choc</span>
+        </button>
+        <button class="selector-pill" data-origin="brazil-minas">
+          🇧🇷 Brazil — Minas Gerais
+          <span class="pill-sub">Pulped Natural · Caramel · Walnut</span>
+        </button>
+        <button class="selector-pill" data-origin="peru">
+          🇵🇪 Peru — Cajamarca
+          <span class="pill-sub">Washed · Plum · Mild Citrus</span>
+        </button>
+        <button class="selector-pill" data-origin="yemen">
+          🇾🇪 Yemen — Haraaz
+          <span class="pill-sub">Natural · Spice · Dried Fig</span>
+        </button>
+        <button class="selector-pill" data-origin="sumatra">
+          🇮🇩 Sumatra — Mandheling
+          <span class="pill-sub">Wet Hulled · Cedar · Dark Herb</span>
+        </button>
+        <button class="selector-pill" data-origin="flores">
+          🇮🇩 Indonesia — Flores Bajawa
+          <span class="pill-sub">Washed · Cacao · Brown Sugar</span>
+        </button>
+        <button class="selector-pill" data-origin="taiwan">
+          🇹🇼 Taiwan — Ali Mountain
+          <span class="pill-sub">Washed · Butter · Milk Oolong</span>
+        </button>
+        <button class="selector-pill" data-origin="japan-toku">
+          🇯🇵 Japan — Tokushima
+          <span class="pill-sub">Washed · Sweet · Delicate</span>
+        </button>
+        <button class="selector-pill" data-origin="rwanda">
+          🇷🇼 Rwanda — Nyamasheke
+          <span class="pill-sub">Washed · Hibiscus · Black Tea</span>
+        </button>
+        <button class="selector-pill" data-origin="burundi">
+          🇧🇮 Burundi — Kayanza
+          <span class="pill-sub">Washed · Peach · Honey</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- ROAST LEVEL -->
+    <div>
+      <div class="sidebar-section-title">Roast Level</div>
+      <div class="roast-meter" id="roastMeter">
+        <div class="roast-segment selected" data-roast="light" style="background:#a8c8e8;height:12px;" title="Light"></div>
+        <div class="roast-segment" data-roast="medium-light" style="background:#7aa8d0;height:16px;" title="Med-Light"></div>
+        <div class="roast-segment" data-roast="medium" style="background:#4a80b8;height:20px;" title="Medium"></div>
+        <div class="roast-segment" data-roast="medium-dark" style="background:#2a5888;height:16px;" title="Med-Dark"></div>
+        <div class="roast-segment" data-roast="dark" style="background:#0a2540;height:12px;" title="Dark"></div>
+      </div>
+      <div class="roast-labels"><span>Light</span><span>Dark</span></div>
+      <div id="roastDisplay">● Light Roast — High acidity, origin-forward</div>
+    </div>
+
+  </div>
+</aside>
+
+<!-- ========== MAIN ========== -->
+<main class="main-content">
+
+  <!-- BREWER SELECTION -->
+  <div>
+    <div class="section-label">Brewing Method</div>
+    <div class="brewer-tabs">
+
+      <div>
+        <div class="tab-group-label">Standard Methods</div>
+        <div class="brewer-tab-group" id="brewerCards">
+          <div class="brewer-card active" data-brewer="v60">
+            <div class="brewer-icon">⌾</div>
+            <div class="brewer-name">Hario<br>V60</div>
+          </div>
+          <div class="brewer-card" data-brewer="orea">
+            <div class="brewer-icon">◎</div>
+            <div class="brewer-name">Orea<br>Dripper</div>
+          </div>
+          <div class="brewer-card" data-brewer="switch">
+            <div class="brewer-icon">⏣</div>
+            <div class="brewer-name">Switch<br>Dripper</div>
+          </div>
+          <div class="brewer-card" data-brewer="origami">
+            <div class="brewer-icon">◈</div>
+            <div class="brewer-name">Origami<br>Dripper</div>
+          </div>
+          <div class="brewer-card" data-brewer="syphon">
+            <div class="brewer-icon">⚗</div>
+            <div class="brewer-name">Syphon</div>
+          </div>
+          <div class="brewer-card" data-brewer="chemex">
+            <div class="brewer-icon">⏧</div>
+            <div class="brewer-name">Chemex</div>
+          </div>
+          <div class="brewer-card" data-brewer="aeropress">
+            <div class="brewer-icon">⬡</div>
+            <div class="brewer-name">Aero-<br>press</div>
+          </div>
+          <div class="brewer-card" data-brewer="kalita">
+            <div class="brewer-icon">▭</div>
+            <div class="brewer-name">Kalita<br>Wave</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="tab-group-label">🏆 Champions' Methods</div>
+        <div class="brewer-tab-group" id="championCards">
+          <div class="brewer-card champion-card" data-brewer="tetsu-kasuya">
+            <div class="champion-badge">WBrC</div>
+            <div class="brewer-icon">⌾</div>
+            <div class="brewer-name">Tetsu<br>4-6 Method</div>
+          </div>
+          <div class="brewer-card champion-card" data-brewer="scott-rao">
+            <div class="champion-badge">Expert</div>
+            <div class="brewer-icon">⌾</div>
+            <div class="brewer-name">Scott Rao<br>V60</div>
+          </div>
+          <div class="brewer-card champion-card" data-brewer="lance-hedrick">
+            <div class="champion-badge">WBrC '22</div>
+            <div class="brewer-icon">◎</div>
+            <div class="brewer-name">Lance<br>Hedrick</div>
+          </div>
+          <div class="brewer-card champion-card" data-brewer="xu-feiran">
+            <div class="champion-badge">WBrC '19</div>
+            <div class="brewer-icon">⌾</div>
+            <div class="brewer-name">Xu<br>Feiran</div>
+          </div>
+          <div class="brewer-card champion-card" data-brewer="carlos-medina">
+            <div class="champion-badge">WBrC '23</div>
+            <div class="brewer-icon">◈</div>
+            <div class="brewer-name">Carlos<br>Medina</div>
+          </div>
+          <div class="brewer-card champion-card" data-brewer="george-peng">
+            <div class="champion-badge">WBrC '25</div>
+            <div class="brewer-icon">◇</div>
+            <div class="brewer-name">George<br>Peng</div>
+          </div>
+          <div class="brewer-card champion-card" data-brewer="chad-wang">
+            <div class="champion-badge">WBrC '17</div>
+            <div class="brewer-icon">⌾</div>
+            <div class="brewer-name">Chad<br>Wang</div>
+          </div>
+          <div class="brewer-card champion-card" data-brewer="yuki-mameya">
+            <div class="champion-badge">JBrC</div>
+            <div class="brewer-icon">⚗</div>
+            <div class="brewer-name">Yuki<br>Mameya</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RECIPE STATS -->
+  <div class="recipe-panel" id="recipePanel">
+
+    <div class="recipe-card animate-in" id="mainRecipeCard">
+      <div class="recipe-card-title" id="recipeTitle">Hario V60</div>
+      <div class="recipe-card-sub" id="recipeSub">Pour-over · 60° cone · Single hole</div>
+      <div id="championCreditWrap"></div>
+      <div class="recipe-stats">
+        <div class="stat-item">
+          <div class="stat-label">Coffee Dose</div>
+          <div class="stat-value" id="statDose">15<span class="stat-unit">g</span></div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Water</div>
+          <div class="stat-value" id="statWater">250<span class="stat-unit">ml</span></div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Ratio</div>
+          <div class="stat-value" id="statRatio">1<span class="stat-unit">:16.7</span></div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Brew Time</div>
+          <div class="stat-value" id="statTime">3:00<span class="stat-unit">min</span></div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Water Temp</div>
+          <div class="stat-value" id="statTemp">94<span class="stat-unit">°C</span></div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Grind Size</div>
+          <div class="stat-value" style="font-size:0.9rem;" id="statGrind">Medium-Fine</div>
+        </div>
+      </div>
+      <div id="championContextBox"></div>
+    </div>
+
+    <!-- WATER QUALITY -->
+    <div class="recipe-card animate-in">
+      <div class="recipe-card-title">Water Quality</div>
+      <div class="recipe-card-sub">Mineral profile & PPM guide</div>
+      <div class="water-indicators">
+        <div class="water-row">
+          <span>TDS (PPM)</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="wPPM" style="color:var(--blue);font-weight:500;min-width:60px;text-align:right;">75–125</span>
+            <div class="water-bar-wrap"><div class="water-bar-fill" id="wPPMBar" style="width:55%"></div></div>
+          </div>
+        </div>
+        <div class="water-row">
+          <span>Hardness (Ca/Mg)</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="wHard" style="color:var(--blue);font-weight:500;min-width:60px;text-align:right;">50–100</span>
+            <div class="water-bar-wrap"><div class="water-bar-fill" id="wHardBar" style="width:50%"></div></div>
+          </div>
+        </div>
+        <div class="water-row">
+          <span>Alkalinity (HCO₃)</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="wAlk" style="color:var(--blue);font-weight:500;min-width:60px;text-align:right;">40–70</span>
+            <div class="water-bar-wrap"><div class="water-bar-fill" id="wAlkBar" style="width:45%"></div></div>
+          </div>
+        </div>
+        <div class="water-row">
+          <span>pH Target</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="wPH" style="color:var(--blue);font-weight:500;min-width:60px;text-align:right;">6.8–7.2</span>
+            <div class="water-bar-wrap"><div class="water-bar-fill" id="wPHBar" style="width:65%"></div></div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:0.6rem;color:var(--muted);margin-top:0.75rem;line-height:1.6;" id="waterNote">
+        Soft water preferred. Avoid distilled or very hard tap water.
+      </div>
+    </div>
+
+    <!-- POUR STEPS -->
+    <div class="flow-card animate-in">
+      <div class="flow-title">Pour Flow Guide</div>
+      <div class="step-col-header">
+        <span>Step</span><span>Action</span><span>At time</span><span>Pour</span><span>Total</span>
+      </div>
+      <div class="pour-steps" id="pourSteps"></div>
+      <div class="flow-bars-wrap">
+        <div class="flow-bars" id="flowBars"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TIMER + POUR GUIDE -->
+  <div class="timer-section">
+    <div class="timer-display" id="timerDisplay">0:00</div>
+    <div class="timer-controls">
+      <button class="timer-btn timer-btn-start" id="timerBtn" onclick="toggleTimer()">Start</button>
+      <button class="timer-btn timer-btn-reset" onclick="resetTimer()">Reset</button>
+    </div>
+    <div class="timer-info">
+      <div class="timer-next" id="timerNext">Press Start — Bloom pour at <strong>0:00</strong></div>
+      <div class="timer-progress">
+        <div class="timer-progress-fill" id="timerProgressFill" style="width:0%"></div>
+      </div>
+    </div>
+    <!-- POUR GUIDE -->
+    <div class="pour-guide-wrap">
+      <div class="pour-guide-label">Pour Guide</div>
+      <canvas id="pourGuideCanvas" width="148" height="148"></canvas>
+      <div class="pour-guide-step" id="pourGuideStep">Top View</div>
+    </div>
+  </div>
+
+  <!-- GRIND + TASTING -->
+  <div class="bottom-grid">
+
+    <div class="grind-card">
+      <div class="section-label">Grind Guide</div>
+      <div class="grind-visual" id="grindVisual"></div>
+      <div class="grind-label" id="grindLabel">Medium-Fine · ~500 µm</div>
+      <div style="font-size:0.62rem;color:var(--muted);line-height:1.65;margin-top:0.6rem;" id="grindNote">
+        Burr grinder recommended.
+      </div>
+      <div class="grinder-refs" id="grinderRefs">
+        <div class="grinder-ref-row">
+          <div class="grinder-ref-name">
+            Comandante C40
+            <span>MK4 / Nitro Blade</span>
+          </div>
+          <div class="grinder-ref-val" id="comandanteVal">24–26 <span>clicks</span></div>
+        </div>
+        <div class="grinder-ref-row">
+          <div class="grinder-ref-name">
+            Mahlkönig EK43
+            <span>Filter burrs (standard)</span>
+          </div>
+          <div class="grinder-ref-val" id="ek43Val">8.5–9.5 <span>dial</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes-card">
+      <div class="notes-title">Tasting Notes</div>
+      <div class="tasting-tags" id="tastingTags"></div>
+      <div class="origin-note" id="originNote"></div>
+    </div>
+
+  </div>
+
+</main>
+</div>
+
+<script>
+// =============================================================
+// DATA — ORIGINS (20)
+// =============================================================
+const ORIGINS = {
+  "eth-yirga": {
+    name: "Ethiopia — Yirgacheffe", process: "Washed",
+    notes: ["Bergamot","Jasmine","Lemon Zest","Green Tea","Apricot"],
+    description: "Yirgacheffe coffees are prized for their delicate floral aromatics — jasmine and bergamot — with vibrant citrus acidity and a clean, tea-like body. The definitive floral African cup.",
+    tempAdjust: +1, ppmNote: "Soft water (60–100 PPM) essential. Bicarbonate-heavy water mutes floral delicacy.",
+    water: { ppm:"60–100", hard:"40–80", alk:"30–60", ph:"6.8–7.2", note:"Very soft water preferred.", ppmBar:45, hardBar:38, alkBar:35, phBar:62 }
+  },
+  "eth-sidama": {
+    name: "Ethiopia — Sidama", process: "Natural",
+    notes: ["Blueberry","Strawberry","Red Wine","Dark Chocolate","Ferment"],
+    description: "Sidama naturals offer a heavier, fruit-forward cup. Blueberry and red wine dominate. Extended drying on raised beds creates layers of fermented fruit complexity.",
+    tempAdjust: -1, ppmNote: "Slightly harder water (100–130 PPM) helps tame natural ferment while preserving fruit sweetness.",
+    water: { ppm:"100–130", hard:"70–110", alk:"50–80", ph:"6.8–7.2", note:"Medium hardness suits natural process.", ppmBar:60, hardBar:58, alkBar:50, phBar:62 }
+  },
+  "eth-guji": {
+    name: "Ethiopia — Guji", process: "Anaerobic Natural",
+    notes: ["Mango","Passion Fruit","Rum","Dark Cherry","Rose"],
+    description: "Guji anaerobic naturals represent the experimental edge of Ethiopian coffee. Extended fermentation in sealed tanks amplifies tropical fruit to extraordinary intensity.",
+    tempAdjust: -2, ppmNote: "Soft water (80–110 PPM). Reduce temperature 2–3°C versus standard natural.",
+    water: { ppm:"80–110", hard:"50–85", alk:"35–60", ph:"6.7–7.1", note:"Soft water protects delicate ferment aromatics.", ppmBar:50, hardBar:45, alkBar:38, phBar:58 }
+  },
+  "kenya": {
+    name: "Kenya — Kirinyaga (SL28)", process: "Washed",
+    notes: ["Blackcurrant","Tomato","Grapefruit","Brown Sugar","Cola"],
+    description: "Kenyan SL28 delivers electrifying acidity — blackcurrant, tomato, grapefruit in a full, syrupy body. Double fermentation (Kenya AA grade) produces unmatched complexity.",
+    tempAdjust: +2, ppmNote: "Medium hardness (100–130 PPM). Magnesium-rich water amplifies complex fruit acidity.",
+    water: { ppm:"100–130", hard:"70–110", alk:"50–80", ph:"6.8–7.3", note:"Mg-rich water shines with Kenya SL28.", ppmBar:62, hardBar:60, alkBar:52, phBar:65 }
+  },
+  "colombia-huila": {
+    name: "Colombia — Huila", process: "Washed",
+    notes: ["Caramel","Red Apple","Panela","Milk Chocolate","Hazelnut"],
+    description: "Huila coffees are the crowd-pleaser — balanced sweetness, moderate acidity, caramel finish. The high altitude (~1,800m) delivers clean, sweet complexity without extremes.",
+    tempAdjust: 0, ppmNote: "Versatile with most water (75–150 PPM). Moderate alkalinity rounds the mild acidity.",
+    water: { ppm:"75–150", hard:"50–110", alk:"40–80", ph:"6.7–7.3", note:"Versatile — tolerates wider water range.", ppmBar:55, hardBar:50, alkBar:48, phBar:62 }
+  },
+  "colombia-nar": {
+    name: "Colombia — Nariño", process: "Washed",
+    notes: ["Mandarin","Lime","Panela","Milk Chocolate","Floral"],
+    description: "Nariño's extreme altitude (up to 2,300m) produces coffees with razor-sharp citrus acidity and delicate sweetness. One of the highest-grown coffees in the world.",
+    tempAdjust: +1, ppmNote: "Soft to medium water (70–120 PPM). High altitude demands clean, unobtrusive water.",
+    water: { ppm:"70–120", hard:"45–85", alk:"35–65", ph:"6.7–7.2", note:"Soft water highlights altitude-driven citrus.", ppmBar:48, hardBar:42, alkBar:38, phBar:60 }
+  },
+  "colombia-geisha": {
+    name: "Colombia — Geisha (Cauca)", process: "Washed",
+    notes: ["White Peach","Bergamot","Hibiscus","Lychee","Honey"],
+    description: "Colombian Geisha from Cauca offers an accessible expression of the variety — floral and stone-fruit forward with a silky body and gentler acidity than its Panamanian cousin.",
+    tempAdjust: -1, ppmNote: "Soft water (60–90 PPM) essential for Geisha varieties everywhere.",
+    water: { ppm:"60–90", hard:"35–70", alk:"25–55", ph:"6.8–7.2", note:"Very soft water to protect Geisha aromatics.", ppmBar:42, hardBar:36, alkBar:32, phBar:62 }
+  },
+  "costa-rica": {
+    name: "Costa Rica — Tarrazú", process: "Honey",
+    notes: ["Milk Chocolate","Tangerine","Honey","Brown Sugar","Almond"],
+    description: "Tarrazú honey-processed coffees balance the cleanliness of washed and the sweetness of natural. Milk chocolate and tangerine with a smooth, medium body.",
+    tempAdjust: 0, ppmNote: "Medium water (80–130 PPM). Honey process benefits from slightly harder water.",
+    water: { ppm:"80–130", hard:"55–100", alk:"40–72", ph:"6.8–7.3", note:"Medium hardness suits honey process.", ppmBar:56, hardBar:52, alkBar:46, phBar:64 }
+  },
+  "panama": {
+    name: "Panama — Boquete Geisha", process: "Natural",
+    notes: ["Jasmine","Mango","Tropical Fruit","Peach","Bergamot"],
+    description: "Panama Natural Geisha is the pinnacle of floral coffee. Natural processing on Geisha amplifies tropical stone fruit while retaining the variety's signature jasmine complexity.",
+    tempAdjust: -2, ppmNote: "Very soft water (50–80 PPM). High mineral water will mute the jasmine irreversibly.",
+    water: { ppm:"50–80", hard:"30–60", alk:"20–48", ph:"6.8–7.2", note:"Ultra-soft water — protect delicate aromatics at all costs.", ppmBar:35, hardBar:28, alkBar:28, phBar:62 }
+  },
+  "guatemala": {
+    name: "Guatemala — Huehuetenango", process: "Washed",
+    notes: ["Dark Chocolate","Plum","Molasses","Orange Peel","Walnut"],
+    description: "Huehue coffees are bold and structured — deep chocolate base with dried fruit sweetness. The volcanic soil and altitude (~2,000m) produce exceptional density and complexity.",
+    tempAdjust: +1, ppmNote: "Medium water (90–140 PPM) suits the full-bodied profile.",
+    water: { ppm:"90–140", hard:"60–100", alk:"45–75", ph:"6.8–7.3", note:"Medium water matches the full-bodied profile.", ppmBar:58, hardBar:55, alkBar:48, phBar:64 }
+  },
+  "brazil-sp": {
+    name: "Brazil — São Paulo (Mogiana)", process: "Natural",
+    notes: ["Hazelnut","Dark Chocolate","Caramel","Dried Fruit","Vanilla"],
+    description: "Mogiana naturals are Brazil's finest — low acidity, full body, and exceptional sweetness. The classic espresso base, equally excellent as filter.",
+    tempAdjust: -1, ppmNote: "Medium water (90–140 PPM). Low acidity benefits from moderate alkalinity.",
+    water: { ppm:"90–140", hard:"60–110", alk:"50–80", ph:"6.9–7.4", note:"Moderate alkalinity suits Brazil's low-acid profile.", ppmBar:58, hardBar:56, alkBar:52, phBar:66 }
+  },
+  "brazil-minas": {
+    name: "Brazil — Minas Gerais", process: "Pulped Natural",
+    notes: ["Caramel","Walnut","Milk Chocolate","Sweet Citrus","Almond"],
+    description: "Minas Gerais pulped naturals offer a structured sweetness — caramel and walnut on a creamy base. Cerrado's dry climate concentrates sugars exceptionally.",
+    tempAdjust: -1, ppmNote: "Medium water (90–130 PPM) works well with pulped natural sweetness.",
+    water: { ppm:"90–130", hard:"58–100", alk:"45–75", ph:"6.9–7.4", note:"Medium hardness complements the caramel sweetness.", ppmBar:56, hardBar:52, alkBar:46, phBar:66 }
+  },
+  "peru": {
+    name: "Peru — Cajamarca", process: "Washed",
+    notes: ["Plum","Mild Citrus","Brown Sugar","Floral","Green Apple"],
+    description: "Cajamarca washed coffees are understated gems — gentle floral aromatics, mild stone fruit, and balanced acidity. High altitude certified organic lots are particularly prized.",
+    tempAdjust: 0, ppmNote: "Soft to medium water (70–120 PPM). Understated profile needs clean water.",
+    water: { ppm:"70–120", hard:"45–85", alk:"35–60", ph:"6.7–7.2", note:"Clean, soft water amplifies subtle notes.", ppmBar:48, hardBar:42, alkBar:36, phBar:60 }
+  },
+  "yemen": {
+    name: "Yemen — Haraaz", process: "Natural",
+    notes: ["Dark Fruit","Spice","Tobacco","Dried Fig","Dark Chocolate"],
+    description: "Yemen Haraaz offers an ancient cup — spice, dried fruit, and tobacco over dark chocolate. Ancient heirloom varietals and traditional drying create a complexity found nowhere else.",
+    tempAdjust: +3, ppmNote: "Medium to hard water (100–150 PPM) suits the rustic, full-bodied profile.",
+    water: { ppm:"100–150", hard:"70–120", alk:"55–90", ph:"6.9–7.4", note:"Medium-hard water suits Yemen's structured intensity.", ppmBar:65, hardBar:62, alkBar:58, phBar:66 }
+  },
+  "sumatra": {
+    name: "Sumatra — Mandheling", process: "Wet Hulled (Giling Basah)",
+    notes: ["Cedar","Dark Herbs","Tobacco","Cocoa","Earthy Spice"],
+    description: "Sumatran wet-hulled processing creates the most distinctive cup in coffee — full body, low acidity, earthy herbal complexity. Cedar and dark cocoa define this style.",
+    tempAdjust: +2, ppmNote: "Hard water (130–180 PPM) suits Sumatra's full-bodied, low-acid profile.",
+    water: { ppm:"130–180", hard:"90–140", alk:"70–110", ph:"7.0–7.5", note:"Hard water complements the heavy body.", ppmBar:72, hardBar:68, alkBar:64, phBar:70 }
+  },
+  "flores": {
+    name: "Indonesia — Flores Bajawa", process: "Washed",
+    notes: ["Cacao","Brown Sugar","Black Tea","Mild Spice","Caramel"],
+    description: "Flores Bajawa washed coffees are Indonesia's cleaner alternative — cacao and brown sugar with a tea-like elegance absent from Sumatra. Volcanic soil contributes mineral clarity.",
+    tempAdjust: +1, ppmNote: "Medium water (90–130 PPM). Cleaner than Sumatra, needs less mineral intervention.",
+    water: { ppm:"90–130", hard:"58–100", alk:"44–72", ph:"6.9–7.3", note:"Medium water suits the clean, balanced profile.", ppmBar:56, hardBar:52, alkBar:46, phBar:64 }
+  },
+  "taiwan": {
+    name: "Taiwan — Ali Mountain", process: "Washed",
+    notes: ["Butter","Brown Sugar","Milk Oolong","Vanilla","Sweet Citrus"],
+    description: "Ali Mountain coffees are subtly sweet — milk oolong tea character, buttery body, and gentle caramel sweetness. The misty high-altitude climate produces rare delicacy.",
+    tempAdjust: -1, ppmNote: "Soft water (60–90 PPM). Taiwan mountain spring water is the ideal reference.",
+    water: { ppm:"60–90", hard:"38–68", alk:"28–52", ph:"6.8–7.2", note:"Soft water enhances the tea-like delicacy.", ppmBar:42, hardBar:36, alkBar:32, phBar:62 }
+  },
+  "japan-toku": {
+    name: "Japan — Tokushima", process: "Washed",
+    notes: ["Sweet","Delicate Floral","Light Stone Fruit","Clean Finish","Soft Citrus"],
+    description: "Domestic Japanese coffee from Tokushima is a rarity — impossibly delicate, clean, and sweet. Grown in greenhouse conditions, these represent a unique expression of Japan's coffee culture.",
+    tempAdjust: -2, ppmNote: "Extremely soft water (40–70 PPM). Japanese soft spring water is the reference standard.",
+    water: { ppm:"40–70", hard:"25–50", alk:"18–40", ph:"6.7–7.1", note:"Ultra-soft water essential for this delicate origin.", ppmBar:30, hardBar:24, alkBar:22, phBar:58 }
+  },
+  "rwanda": {
+    name: "Rwanda — Nyamasheke", process: "Washed",
+    notes: ["Hibiscus","Black Tea","Raspberry","Brown Sugar","Jasmine"],
+    description: "Nyamasheke washed coffees are Rwanda's finest — hibiscus and black tea aromatics with bright red fruit acidity. Lake Kivu's micro-climate produces remarkable consistency.",
+    tempAdjust: +1, ppmNote: "Soft to medium water (70–110 PPM). Clean water showcases hibiscus florals.",
+    water: { ppm:"70–110", hard:"45–85", alk:"35–62", ph:"6.8–7.2", note:"Soft water highlights Rwanda's distinctive floral profile.", ppmBar:50, hardBar:44, alkBar:38, phBar:62 }
+  },
+  "burundi": {
+    name: "Burundi — Kayanza", process: "Washed",
+    notes: ["White Peach","Honey","Milk Chocolate","Sweet Lemon","Black Tea"],
+    description: "Kayanza coffees from Burundi offer honeyed sweetness with stone fruit clarity. Proximity to Rwanda produces similar floral characteristics with added peachy sweetness and chocolate depth.",
+    tempAdjust: 0, ppmNote: "Soft to medium water (70–120 PPM). Clean and sweet water profile ideal.",
+    water: { ppm:"70–120", hard:"45–85", alk:"35–62", ph:"6.8–7.2", note:"Soft to medium water highlights the peach sweetness.", ppmBar:50, hardBar:44, alkBar:38, phBar:62 }
+  }
+};
+
+// =============================================================
+// ROASTS
+// =============================================================
+const ROASTS = {
+  light: { label: "Light Roast", desc: "High acidity · Origin-forward", tempAdj: 0, timeAdj: 0, grindAdj: -1 },
+  "medium-light": { label: "Medium-Light", desc: "Balanced acidity · Developing sweetness", tempAdj: -1, timeAdj: 0, grindAdj: 0 },
+  medium: { label: "Medium Roast", desc: "Balanced · Caramel sweetness", tempAdj: -2, timeAdj: +10, grindAdj: 0 },
+  "medium-dark": { label: "Medium-Dark", desc: "Lower acidity · Bittersweet", tempAdj: -4, timeAdj: +15, grindAdj: +1 },
+  dark: { label: "Dark Roast", desc: "Low acidity · Roast character dominant", tempAdj: -6, timeAdj: +20, grindAdj: +2 },
+};
+
+// =============================================================
+// GRINDER REFERENCE DATA
+// Comandante C40 MK4 (Nitro Blade) — clicks from 0
+// EK43 dial — standard filter burrs, 0–11 scale
+// =============================================================
+const GRINDER_REF = {
+  // [comandante clicks range, ek43 dial range]
+  "Fine":         { c40: "16–19", ek43: "6.5–7.5",  label: "Fine · ~350–420 µm" },
+  "Fine-Medium":  { c40: "20–23", ek43: "7.5–8.5",  label: "Fine-Medium · ~420–500 µm" },
+  "Medium-Fine":  { c40: "24–27", ek43: "8.5–9.5",  label: "Medium-Fine · ~500–600 µm" },
+  "Medium":       { c40: "28–32", ek43: "9.5–10.5", label: "Medium · ~600–720 µm" },
+  "Medium-Coarse":{ c40: "33–38", ek43: "10.0–11.0",label: "Medium-Coarse · ~720–850 µm" },
+  "Coarse":       { c40: "38–44", ek43: "10.5–11.5",label: "Coarse · ~850–1000 µm" },
+};
+
+// =============================================================
+// BREWERS — Standard
+// =============================================================
+const BREWERS = {
+  v60: {
+    name: "Hario V60", sub: "Pour-over · 60° cone · Single hole", champion: false,
+    dose: 15, waterMl: 250, ratioStr: "1:16.7", baseTemp: 94, timeStr: "2:45–3:15", totalSec: 195,
+    grind: "Medium-Fine", grindNote: "Conical dripper rewards precise grind. Finer = slower draw-down = more extraction.",
+    steps: [
+      { name: "Bloom pour", at: 0, pour: 45, note: "Saturate all grounds. Wait for CO₂ degas." },
+      { name: "Bloom rest", at: 0, pour: 0, note: "Let bloom settle 35–40s." },
+      { name: "1st pour", at: 45, pour: 80, note: "Slow circular pour towards centre." },
+      { name: "2nd pour", at: 90, pour: 75, note: "Continue circular motion." },
+      { name: "Final pour", at: 135, pour: 50, note: "Top-up to target weight." },
+    ],
+    water: { ppm:"75–125", hard:"50–100", alk:"40–70", ph:"6.8–7.2", note:"Soft to medium water ideal.", ppmBar:55, hardBar:50, alkBar:45, phBar:62 },
+  },
+  orea: {
+    name: "Orea Dripper", sub: "Pour-over · Flat-bed · Multi-hole", champion: false,
+    dose: 15, waterMl: 250, ratioStr: "1:16.7", baseTemp: 93, timeStr: "2:30–3:00", totalSec: 180,
+    grind: "Medium", grindNote: "Flat bed + multi-hole allows faster flow. Slightly coarser than V60 for same brew time.",
+    steps: [
+      { name: "Bloom pour", at: 0, pour: 50, note: "Centre to edge bloom. Full saturation." },
+      { name: "Bloom rest", at: 0, pour: 0, note: "Wait 30s." },
+      { name: "1st pour", at: 40, pour: 100, note: "Aggressive pour — flat bed tolerates high flow rate." },
+      { name: "2nd pour", at: 90, pour: 100, note: "Complete target water weight." },
+    ],
+    water: { ppm:"75–125", hard:"50–100", alk:"40–70", ph:"6.8–7.3", note:"Medium-soft preferred for clean extraction.", ppmBar:55, hardBar:50, alkBar:44, phBar:63 },
+  },
+  switch: {
+    name: "Switch Dripper", sub: "Immersion + Pour-over hybrid", champion: false,
+    dose: 15, waterMl: 250, ratioStr: "1:16.7", baseTemp: 93, timeStr: "3:30–4:00", totalSec: 225,
+    grind: "Medium-Coarse", grindNote: "Immersion phase means coarser grind. Switch controls extraction window precisely.",
+    steps: [
+      { name: "Close switch", at: 0, pour: 0, note: "Close valve before adding coffee." },
+      { name: "Bloom (immersion)", at: 0, pour: 50, note: "Add bloom water. Immersion begins." },
+      { name: "Full pour (immersion)", at: 30, pour: 200, note: "Add remaining water slowly." },
+      { name: "Immersion rest", at: 90, pour: 0, note: "Full contact: 2:30–3:00 total." },
+      { name: "Open switch", at: 180, pour: 0, note: "Release valve — draw-down starts." },
+    ],
+    water: { ppm:"80–130", hard:"60–100", alk:"50–80", ph:"6.8–7.2", note:"Slightly harder water suits immersion well.", ppmBar:56, hardBar:52, alkBar:48, phBar:62 },
+  },
+  origami: {
+    name: "Origami Dripper", sub: "Pour-over · 20 ridges · Versatile", champion: false,
+    dose: 15, waterMl: 250, ratioStr: "1:16.7", baseTemp: 93, timeStr: "2:45–3:15", totalSec: 195,
+    grind: "Medium-Fine", grindNote: "Origami has excellent airflow from ridged walls. Grind between V60 and Orea settings.",
+    steps: [
+      { name: "Bloom pour", at: 0, pour: 45, note: "Centre bloom, slow saturation." },
+      { name: "Bloom rest", at: 0, pour: 0, note: "35s rest." },
+      { name: "1st pour", at: 40, pour: 90, note: "Gentle spiral from centre." },
+      { name: "2nd pour", at: 100, pour: 75, note: "Maintain constant water level." },
+      { name: "Final pour", at: 150, pour: 40, note: "Gentle top-up." },
+    ],
+    water: { ppm:"75–120", hard:"50–90", alk:"40–65", ph:"6.8–7.2", note:"Soft water highlights floral and fruity profiles.", ppmBar:50, hardBar:44, alkBar:40, phBar:62 },
+  },
+  syphon: {
+    name: "Syphon", sub: "Full immersion · Vacuum pressure", champion: false,
+    dose: 20, waterMl: 300, ratioStr: "1:15", baseTemp: 92, timeStr: "5:00–6:00", totalSec: 330,
+    grind: "Medium", grindNote: "Full immersion + pressure: medium grind. Too fine causes over-extraction under vacuum.",
+    steps: [
+      { name: "Heat lower vessel", at: 0, pour: 0, note: "Fill lower with hot water, apply heat." },
+      { name: "Add coffee (upper)", at: 60, pour: 0, note: "Water rises to upper chamber. Add grounds." },
+      { name: "Stir (1st)", at: 90, pour: 0, note: "Gentle stir to saturate all grounds." },
+      { name: "Full immersion", at: 100, pour: 300, note: "Maintain heat. Full immersion contact." },
+      { name: "Stir (2nd)", at: 190, pour: 0, note: "Second stir before removing heat." },
+      { name: "Remove heat", at: 210, pour: 0, note: "Vacuum draws liquid down to lower vessel." },
+    ],
+    water: { ppm:"80–130", hard:"60–110", alk:"50–80", ph:"6.8–7.3", note:"Harder water suits syphon's high-heat profile.", ppmBar:56, hardBar:56, alkBar:50, phBar:64 },
+  },
+  chemex: {
+    name: "Chemex", sub: "Pour-over · Thick paper · Ultra-clean", champion: false,
+    dose: 30, waterMl: 500, ratioStr: "1:16.7", baseTemp: 94, timeStr: "4:00–5:00", totalSec: 270,
+    grind: "Medium-Coarse", grindNote: "Thick Chemex paper slows flow — coarser than V60. Pre-rinse paper thoroughly with hot water.",
+    steps: [
+      { name: "Pre-rinse filter", at: 0, pour: 0, note: "Rinse paper with hot water, discard." },
+      { name: "Bloom pour", at: 0, pour: 60, note: "Slow bloom over all grounds." },
+      { name: "Bloom rest", at: 0, pour: 0, note: "45s rest." },
+      { name: "1st pour", at: 50, pour: 150, note: "Slow circular pour." },
+      { name: "2nd pour", at: 120, pour: 150, note: "Continue as level drops." },
+      { name: "Final pour", at: 190, pour: 140, note: "Gentle top-up to target." },
+    ],
+    water: { ppm:"75–125", hard:"50–95", alk:"40–70", ph:"6.8–7.2", note:"Thick paper filters fines — water quality matters most here.", ppmBar:54, hardBar:50, alkBar:44, phBar:62 },
+  },
+  aeropress: {
+    name: "Aeropress", sub: "Pressure · Immersion · Versatile", champion: false,
+    dose: 17, waterMl: 220, ratioStr: "1:13", baseTemp: 85, timeStr: "1:30–2:30", totalSec: 120,
+    grind: "Fine-Medium", grindNote: "Pressure-assisted extraction is forgiving. Fine-medium is typical; adjust freely to taste.",
+    steps: [
+      { name: "Add coffee + bloom", at: 0, pour: 40, note: "30s bloom, gentle swirl." },
+      { name: "Full pour", at: 30, pour: 180, note: "Add remaining water rapidly." },
+      { name: "Stir", at: 60, pour: 0, note: "4–6 gentle stirs." },
+      { name: "Press slowly", at: 80, pour: 0, note: "20–30s press. Stop at hiss." },
+    ],
+    water: { ppm:"75–150", hard:"50–120", alk:"40–80", ph:"6.5–7.5", note:"Aeropress tolerates wide water range.", ppmBar:55, hardBar:50, alkBar:48, phBar:65 },
+  },
+  kalita: {
+    name: "Kalita Wave", sub: "Pour-over · Flat bed · 3 holes", champion: false,
+    dose: 15, waterMl: 250, ratioStr: "1:16.7", baseTemp: 93, timeStr: "3:00–3:30", totalSec: 210,
+    grind: "Medium", grindNote: "Flat-bed extraction is forgiving. Wavy filter prevents edge bypass for even extraction.",
+    steps: [
+      { name: "Bloom pour", at: 0, pour: 45, note: "Even saturation across flat bed." },
+      { name: "Bloom rest", at: 0, pour: 0, note: "40s rest." },
+      { name: "1st pour", at: 45, pour: 80, note: "Steady circular pour." },
+      { name: "2nd pour", at: 105, pour: 75, note: "Continue as bed drops." },
+      { name: "Final pour", at: 165, pour: 50, note: "Gentle top-up." },
+    ],
+    water: { ppm:"75–130", hard:"50–100", alk:"40–70", ph:"6.8–7.2", note:"Forgiving flat-bed design suits a range of water.", ppmBar:54, hardBar:50, alkBar:44, phBar:62 },
+  },
+
+  // =============================================================
+  // CHAMPION METHODS
+  // =============================================================
+  "tetsu-kasuya": {
+    name: "Tetsu Kasuya — 4:6 Method", sub: "Hario V60 · WBrC 2016 Champion", champion: true,
+    credit: "Tetsu Kasuya · World Brewers Cup Champion 2016",
+    dose: 20, waterMl: 300, ratioStr: "1:15", baseTemp: 93, timeStr: "3:30–4:00", totalSec: 225,
+    grind: "Medium-Coarse",
+    grindNote: "Coarser than standard V60 to slow extraction across 5 pours. The 4:6 split is the key variable — adjust first 40% to control acidity/sweetness.",
+    context: "Kasuya's groundbreaking method splits the 300ml water into 5 pours: the first 40% (120ml in 2 pours) controls acidity and sweetness; the remaining 60% (180ml in 3 pours) controls strength. Increasing the first pour of the 40% section = more acidity. Increasing the second = more sweetness. This method is reproducible and deeply educational.",
+    steps: [
+      { name: "1st pour (acidity)", at: 0, pour: 60, note: "First pour of the 40% section. Controls acidity." },
+      { name: "Rest", at: 0, pour: 0, note: "Wait 45s total from 0:00." },
+      { name: "2nd pour (sweetness)", at: 45, pour: 60, note: "Second pour of 40% section. Controls sweetness." },
+      { name: "3rd pour (strength)", at: 90, pour: 60, note: "First pour of 60% section. Builds strength." },
+      { name: "4th pour", at: 135, pour: 60, note: "Continue strength section." },
+      { name: "5th pour", at: 180, pour: 60, note: "Final pour. Target ~3:30–4:00 total." },
+    ],
+    water: { ppm:"80–120", hard:"55–95", alk:"40–68", ph:"6.8–7.2", note:"Kasuya recommends relatively soft, neutral water.", ppmBar:52, hardBar:48, alkBar:42, phBar:62 },
+  },
+  "scott-rao": {
+    name: "Scott Rao — Percolation Recipe", sub: "Hario V60 · Globally Referenced Standard", champion: true,
+    credit: "Scott Rao · Coffee Extraction Expert & Author",
+    dose: 22, waterMl: 360, ratioStr: "1:16.4", baseTemp: 94, timeStr: "3:30–4:30", totalSec: 250,
+    grind: "Medium",
+    grindNote: "Rao's recipe uses a medium grind targeting 18–22% extraction yield. The key is the continuous slow pour and the Rao Spin technique to flatten the coffee bed at bloom.",
+    context: "Scott Rao's reference recipe emphasises the 'Rao Spin' — a gentle swirl of the dripper at the end of bloom to flatten the coffee bed, ensuring even saturation. His continuous-pour style minimises agitation while maximising even extraction. Widely used as a competition baseline.",
+    steps: [
+      { name: "Bloom + Rao Spin", at: 0, pour: 60, note: "Add 60g water, swirl dripper gently to flatten bed." },
+      { name: "Bloom rest", at: 0, pour: 0, note: "45s bloom rest." },
+      { name: "Continuous pour", at: 45, pour: 150, note: "Slow, steady pour in tight spirals. Don't rush." },
+      { name: "Continue pour", at: 120, pour: 150, note: "Maintain slow consistent flow rate throughout." },
+    ],
+    water: { ppm:"75–125", hard:"50–95", alk:"40–68", ph:"6.8–7.2", note:"Rao recommends 75–150 PPM, targeting ~7.0 pH.", ppmBar:52, hardBar:48, alkBar:42, phBar:63 },
+  },
+  "lance-hedrick": {
+    name: "Lance Hedrick — Orea Bypass", sub: "Orea Dripper · WBrC 2022 Finalist", champion: true,
+    credit: "Lance Hedrick · WBrC 2022 Finalist (USA)",
+    dose: 20, waterMl: 320, ratioStr: "1:16", baseTemp: 94, timeStr: "2:30–3:00", totalSec: 180,
+    grind: "Medium-Fine",
+    grindNote: "Hedrick's method uses a shorter contact time at higher temperature with aggressive pours to maximise extraction rate. The Orea's flat bed and multiple holes support this high-flow approach.",
+    context: "Lance Hedrick (known for his YouTube education) popularised a high-agitation, fast-flow Orea technique. His 2022 WBrC presentation featured a bypass dilution method — brew at high concentration (1:12) then dilute with bypass water to final ratio. This increases extraction yield while controlling bitterness.",
+    steps: [
+      { name: "Bloom pour", at: 0, pour: 60, note: "Aggressive bloom — 3× coffee dose. Saturate fully." },
+      { name: "Bloom rest", at: 0, pour: 0, note: "30s bloom." },
+      { name: "1st pour (aggressive)", at: 30, pour: 130, note: "High-flow pour, centre target, allow agitation." },
+      { name: "2nd pour", at: 90, pour: 130, note: "Complete brew — fast draw-down target <3:00." },
+    ],
+    water: { ppm:"80–130", hard:"55–100", alk:"42–72", ph:"6.8–7.3", note:"Slightly harder water suits high-agitation technique.", ppmBar:56, hardBar:52, alkBar:46, phBar:64 },
+  },
+  "xu-feiran": {
+    name: "Xu Feiran — 3-Stage Method", sub: "Hario V60 · WBrC 2019 Champion (China)", champion: true,
+    credit: "Xu Feiran · World Brewers Cup Champion 2019",
+    dose: 15, waterMl: 225, ratioStr: "1:15", baseTemp: 92, timeStr: "3:00–3:30", totalSec: 210,
+    grind: "Medium-Fine",
+    grindNote: "Xu uses a tighter ratio (1:15) with 3 distinct pour stages, each with a rest, to layer extraction precisely. Lower temperature (92°C) softens acidity on the Yirgacheffe she used in competition.",
+    context: "Xu Feiran won the 2019 WBrC with a Yirgacheffe washed coffee using a disciplined 3-stage pour structure. Her recipe emphasises extended bloom (45s) and deliberate rest periods between pours, creating a layered extraction that highlights floral aromatics before developing sweetness. She also advocated for precise water temperature control within ±0.5°C.",
+    steps: [
+      { name: "Bloom pour", at: 0, pour: 45, note: "3× dose bloom. Centre pour, gentle saturation." },
+      { name: "Bloom rest", at: 0, pour: 0, note: "Extended 45s bloom rest." },
+      { name: "1st stage pour", at: 45, pour: 90, note: "Slow spiral pour. Rest 30s after target weight." },
+      { name: "2nd stage rest", at: 90, pour: 0, note: "30s deliberate rest between stages." },
+      { name: "2nd stage pour", at: 120, pour: 90, note: "Second stage. Similar slow spiral pour." },
+    ],
+    water: { ppm:"70–110", hard:"45–85", alk:"35–62", ph:"6.7–7.2", note:"Xu used soft, clean water to protect floral aromatics.", ppmBar:48, hardBar:42, alkBar:38, phBar:60 },
+  },
+  "carlos-medina": {
+    name: "Carlos Medina — 4-Pour Origami", sub: "Origami Dripper · WBrC 2023 Champion (Chile)", champion: true,
+    credit: "Carlos Medina · World Brewers Cup Champion 2023 · Athens",
+    dose: 15.5, waterMl: 240, ratioStr: "1:15.5", baseTemp: 91, timeStr: "2:25–2:40", totalSec: 160,
+    grind: "Medium-Fine",
+    grindNote: "Medina used a 1Zpresso ZP6 Special at setting 4.1 — equivalent to a medium-fine grind. Origami with conical Cafec filters. Target a clean, fast draw-down by ~2:25.",
+    context: "Carlos Medina from Chile won WBrC 2023 in Athens with a Natural Sidra variety from Granja La Esperanza in Colombia's Valle del Cauca (1,400–2,000m). His recipe is deceptively simple — 4 evenly-timed pours every 30 seconds. The Natural Sidra's intense fruit complexity shines through the clean Origami extraction. Medina is an independent competitor who missed the 2022 Melbourne competition due to visa issues, then returned to win in Athens.",
+    steps: [
+      { name: "1st pour (bloom)", at: 0, pour: 50, note: "Pour 50g over 10 seconds. Full even saturation." },
+      { name: "Rest", at: 10, pour: 0, note: "Wait until 0:30." },
+      { name: "2nd pour", at: 30, pour: 70, note: "Pour 70g from 0:30–0:40." },
+      { name: "Rest", at: 40, pour: 0, note: "Wait until 1:00." },
+      { name: "3rd pour", at: 60, pour: 60, note: "Pour 60g from 1:00–1:10." },
+      { name: "Rest", at: 70, pour: 0, note: "Wait until 1:30." },
+      { name: "4th pour (final)", at: 90, pour: 60, note: "Final 60g pour 1:30–1:40. Draw-down target ~2:25." },
+    ],
+    water: { ppm:"60–70", hard:"28–50", alk:"20–40", ph:"6.8–7.2", note:"Medina specified ~65 PPM with equal parts calcium and magnesium — very soft, balanced mineral water.", ppmBar:36, hardBar:28, alkBar:24, phBar:62 },
+  },
+  "george-peng": {
+    name: "George Jinyang Peng — Dual-Temp Solo", sub: "Solo Dripper · WBrC 2025 Champion (China)", champion: true,
+    credit: "George Jinyang Peng · World Brewers Cup Champion 2025 · Jakarta",
+    dose: 15, waterMl: 210, ratioStr: "1:14", baseTemp: 96, timeStr: "1:45–2:00", totalSec: 115,
+    grind: "Medium-Coarse",
+    grindNote: "Peng ground at ~800 microns (26–27 clicks on Comandante C40). The Solo Dripper's 40° angle and precision ribs support fast, even extraction at this coarser setting. Sibarist FAST filters used.",
+    context: "George Jinyang Peng won WBrC 2025 in Jakarta — the largest field in WBrC history (51 competitors) — with a washed Panama Geisha from Mount Totumas Cloud Forest at 1,900m. His defining technique: a dual-temperature structure using 96°C for the first two pours (to open aromatic complexity) then dropping to 80°C for the final pour via Melodrip (to preserve delicate floral notes). Water TDS was just 40 PPM — among the lowest ever used at WBrC. Theme: 'Temperature is not just a number; it's a story that unfolds from origin to cup.'",
+    steps: [
+      { name: "Pre-heat dripper", at: 0, pour: 0, note: "Rinse with 80ml hot water. Pre-heat dramatically impacts flavour." },
+      { name: "1st pour — 96°C", at: 0, pour: 30, note: "30ml at 96°C. Start timer when pouring." },
+      { name: "Rest", at: 0, pour: 0, note: "Wait until 0:30." },
+      { name: "2nd pour — 96°C", at: 30, pour: 90, note: "90ml at 96°C. Steady centre pour." },
+      { name: "3rd pour — 80°C", at: 70, pour: 90, note: "Switch to 80°C. Use Melodrip for gentle, low-agitation flow. Target finish ~1:45." },
+    ],
+    water: { ppm:"40", hard:"15–28", alk:"12–24", ph:"6.7–7.1", note:"Peng used ultra-soft 40 PPM mineral water — the most extreme water spec in recent WBrC history. Essential for Geisha aromatics.", ppmBar:20, hardBar:14, alkBar:14, phBar:57 },
+  },
+  "chad-wang": {
+    name: "Chad Wang — Cold Ceramic Centre Pour", sub: "Ceramic Hario V60 · WBrC 2017 Champion (Taiwan)", champion: true,
+    credit: "Chad Wang · World Brewers Cup Champion 2017 · Budapest",
+    dose: 15, waterMl: 250, ratioStr: "1:16.7", baseTemp: 92, timeStr: "2:00–2:30", totalSec: 145,
+    grind: "Medium",
+    grindNote: "Chad used a medium grind on a cold, unwarmed ceramic Hario V60. Do NOT pre-heat the dripper — the cold ceramic absorbing initial heat is intentional and central to the recipe's character.",
+    context: "Chad Wang from Taiwan won WBrC 2017 in Budapest with a Natural Processed Ninety Plus Panama Geisha. His recipe is strikingly simple: a cold (unwarmed) ceramic V60, a bloom, then a single aggressive centre pour — absolutely no circular motion. The cold ceramic deliberately absorbs heat during extraction, which Wang argued enhanced the intensity and sweetness of his light-roasted Geisha. The ceramic's thermal mass creates a natural temperature gradient that produces a distinctive cup character. He pre-soaked the paper filter off-stage 10 minutes before brewing.",
+    steps: [
+      { name: "Do NOT pre-heat V60", at: 0, pour: 0, note: "Cold ceramic is intentional — heat absorption enhances intensity." },
+      { name: "Pre-soak filter (off-stage)", at: 0, pour: 0, note: "Soak filter with cold water 10min before. Fit snugly." },
+      { name: "Bloom — spiral pour", at: 0, pour: 50, note: "50g at 92°C. Fast 5-second spiral pour." },
+      { name: "Bloom rest", at: 5, pour: 0, note: "30s bloom rest (until 0:35)." },
+      { name: "Full pour — centre only", at: 35, pour: 200, note: "All 200ml remaining. Centre pour ONLY — zero circular motion." },
+    ],
+    water: { ppm:"75–120", hard:"48–88", alk:"36–62", ph:"6.8–7.2", note:"Wang used clean, relatively low-mineral water to let the Geisha's natural fruit character dominate.", ppmBar:50, hardBar:44, alkBar:38, phBar:62 },
+  },
+  "yuki-mameya": {
+    name: "Yuki Mameya — Syphon Signature", sub: "Syphon · Japan Brewers Cup Champion", champion: true,
+    credit: "Yuki Mameya · Mameya Kakeru — Japan Brewers Cup",
+    dose: 18, waterMl: 270, ratioStr: "1:15", baseTemp: 90, timeStr: "4:30–5:30", totalSec: 300,
+    grind: "Medium",
+    grindNote: "Mameya uses slightly coarser than typical syphon grind and lower temperature to highlight the tea-like clarity his style is known for. Precise stir timing is critical.",
+    context: "Yuki Mameya (Mameya Kakeru, Tokyo) is Japan's most celebrated brewer — his syphon work is famous for producing tea-like clarity with remarkable body. His method involves a precise two-stir protocol and lower brewing temperature (90°C) compared to traditional syphon technique, achieving a clean, elegant cup that became his signature.",
+    steps: [
+      { name: "Heat lower vessel", at: 0, pour: 0, note: "Fill with pre-heated water. Apply burner." },
+      { name: "Water rises to upper", at: 60, pour: 0, note: "Add ground coffee when water fully rises." },
+      { name: "Stir #1 (key)", at: 75, pour: 270, note: "10 deliberate stirs — saturate all grounds." },
+      { name: "Immersion", at: 100, pour: 0, note: "Full immersion contact: maintain ~90°C." },
+      { name: "Stir #2 (key)", at: 180, pour: 0, note: "6 stirs — Mameya's second stir timing is precise." },
+      { name: "Remove heat", at: 200, pour: 0, note: "Vacuum draw-down begins. Do not disturb." },
+    ],
+    water: { ppm:"70–110", hard:"45–85", alk:"35–62", ph:"6.8–7.2", note:"Mameya uses soft Tokyo filtered water for tea-like clarity.", ppmBar:48, hardBar:44, alkBar:38, phBar:62 },
+  },
+};
+
+// =============================================================
+// STATE
+// =============================================================
+let selectedOrigin = "eth-yirga";
+let selectedRoast = "light";
+let selectedBrewer = "v60";
+let timerInterval = null;
+let timerRunning = false;
+let timerSeconds = 0;
+
+// =============================================================
+// RENDER
+// =============================================================
+function getTemp() {
+  const b = BREWERS[selectedBrewer];
+  const o = ORIGINS[selectedOrigin];
+  const r = ROASTS[selectedRoast];
+  return b.baseTemp + (o.tempAdjust || 0) + r.tempAdj;
+}
+
+function renderRecipe() {
+  const b = BREWERS[selectedBrewer];
+  const o = ORIGINS[selectedOrigin];
+  const r = ROASTS[selectedRoast];
+  const temp = getTemp();
+  const isChamp = b.champion;
+
+  document.getElementById('recipeTitle').textContent = b.name;
+  document.getElementById('recipeSub').textContent = b.sub;
+  document.getElementById('statDose').innerHTML = b.dose + '<span class="stat-unit">g</span>';
+  document.getElementById('statWater').innerHTML = b.waterMl + '<span class="stat-unit">ml</span>';
+  document.getElementById('statRatio').innerHTML = '1<span class="stat-unit">:' + b.ratioStr.split(':')[1] + '</span>';
+  document.getElementById('statTemp').innerHTML = temp + '<span class="stat-unit">°C</span>';
+  document.getElementById('statGrind').textContent = b.grind;
+  document.getElementById('statTime').innerHTML = b.timeStr + '<span class="stat-unit">min</span>';
+
+  // Champion theme
+  const mc = document.getElementById('mainRecipeCard');
+  mc.classList.toggle('champion-theme', isChamp);
+
+  const ccw = document.getElementById('championCreditWrap');
+  ccw.innerHTML = isChamp ? `<div class="champion-credit">🏆 ${b.credit}</div>` : '';
+
+  const ccb = document.getElementById('championContextBox');
+  ccb.innerHTML = isChamp && b.context ? `<div class="champion-context"><strong>About this method:</strong> ${b.context}</div>` : '';
+
+  // Water
+  const wd = b.water;
+  document.getElementById('wPPM').textContent = wd.ppm;
+  document.getElementById('wHard').textContent = wd.hard;
+  document.getElementById('wAlk').textContent = wd.alk;
+  document.getElementById('wPH').textContent = wd.ph;
+  document.getElementById('wPPMBar').style.width = wd.ppmBar + '%';
+  document.getElementById('wHardBar').style.width = wd.hardBar + '%';
+  document.getElementById('wAlkBar').style.width = wd.alkBar + '%';
+  document.getElementById('wPHBar').style.width = wd.phBar + '%';
+  document.getElementById('waterNote').textContent = o.ppmNote || wd.note;
+
+  renderPourSteps();
+  renderGrind();
+  renderTasting();
+}
+
+function renderPourSteps() {
+  const b = BREWERS[selectedBrewer];
+  const steps = b.steps;
+  const container = document.getElementById('pourSteps');
+  const flowBars = document.getElementById('flowBars');
+  container.innerHTML = '';
+  flowBars.innerHTML = '';
+
+  let cumulative = 0;
+  steps.forEach((step, i) => {
+    cumulative += step.pour;
+    const atStr = (step.at === 0 && i === 0) ? '0:00' : formatTime(step.at);
+    const div = document.createElement('div');
+    div.className = 'pour-step';
+    div.id = 'step-' + i;
+    div.innerHTML = `
+      <span class="step-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="step-name">${step.name}<br><span class="step-note-small">${step.note}</span></span>
+      <span class="step-time">${atStr}</span>
+      <span class="step-vol">${step.pour > 0 ? '+' + step.pour + 'ml' : '—'}</span>
+      <span class="step-total">${cumulative > 0 ? cumulative + 'ml' : '—'}</span>
+    `;
+    container.appendChild(div);
+
+    if (step.pour > 0) {
+      const bar = document.createElement('div');
+      bar.className = 'flow-bar';
+      const h = Math.max(6, Math.round((step.pour / 200) * 40));
+      bar.style.height = h + 'px';
+      bar.style.background = b.champion
+        ? `linear-gradient(to top, #b8860b, var(--gold))`
+        : `linear-gradient(to top, var(--cobalt), var(--sky))`;
+      bar.innerHTML = `<span class="flow-bar-label">${step.pour}ml</span>`;
+      flowBars.appendChild(bar);
+    }
+  });
+}
+
+function renderGrind() {
+  const b = BREWERS[selectedBrewer];
+  const r = ROASTS[selectedRoast];
+  const container = document.getElementById('grindVisual');
+  container.innerHTML = '';
+
+  const grindMap = { "Fine": 3, "Fine-Medium": 4, "Medium-Fine": 5, "Medium": 6, "Medium-Coarse": 8, "Coarse": 10 };
+  const baseLevel = grindMap[b.grind] || 6;
+  const level = Math.min(11, Math.max(2, baseLevel + r.grindAdj));
+
+  for (let i = 1; i <= 12; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'grind-bar' + (i <= level ? ' active' : '');
+    const h = Math.round(8 + (i/12) * 22);
+    bar.style.height = h + 'px';
+    container.appendChild(bar);
+  }
+
+  // Resolve grind key after roast adjustment
+  const resolvedGrindKeys = ["Fine","Fine","Fine-Medium","Medium-Fine","Medium-Fine","Medium","Medium","Medium-Coarse","Medium-Coarse","Coarse","Coarse","Coarse"];
+  const resolvedKey = resolvedGrindKeys[Math.min(11, Math.max(0, level - 1))];
+  const gRef = GRINDER_REF[resolvedKey] || GRINDER_REF["Medium"];
+
+  document.getElementById('grindLabel').textContent = gRef.label;
+  document.getElementById('grindNote').textContent = b.grindNote;
+  document.getElementById('comandanteVal').innerHTML = gRef.c40 + ' <span>clicks</span>';
+  document.getElementById('ek43Val').innerHTML = gRef.ek43 + ' <span>dial</span>';
+}
+
+function renderTasting() {
+  const o = ORIGINS[selectedOrigin];
+  const tagsEl = document.getElementById('tastingTags');
+  tagsEl.innerHTML = '';
+  o.notes.forEach(n => {
+    const t = document.createElement('span');
+    t.className = 'tasting-tag';
+    t.textContent = n;
+    tagsEl.appendChild(t);
+  });
+  document.getElementById('originNote').textContent = o.description;
+}
+
+// =============================================================
+// TIMER
+// =============================================================
+function formatTime(s) {
+  return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+}
+
+function updateTimerStep() {
+  const steps = BREWERS[selectedBrewer].steps;
+  const totalSec = BREWERS[selectedBrewer].totalSec;
+
+  steps.forEach((step, i) => {
+    const el = document.getElementById('step-' + i);
+    if (!el) return;
+    const nextAt = i < steps.length - 1 ? steps[i+1].at : Infinity;
+    if (timerSeconds >= step.at && timerSeconds < nextAt) {
+      el.classList.add('active-step'); el.classList.remove('done-step');
+    } else if (timerSeconds >= nextAt) {
+      el.classList.remove('active-step'); el.classList.add('done-step');
+    } else {
+      el.classList.remove('active-step','done-step');
+    }
+  });
+
+  const nextStep = steps.find(s => s.at > timerSeconds);
+  const nextEl = document.getElementById('timerNext');
+  if (nextStep) {
+    nextEl.innerHTML = `Next: <strong>${nextStep.name}</strong> at <strong>${formatTime(nextStep.at)}</strong>`;
+  } else {
+    nextEl.innerHTML = timerSeconds >= totalSec
+      ? '<strong style="color:var(--accent)">✓ Brew complete — enjoy your cup!</strong>'
+      : 'Final pour in progress…';
+  }
+  document.getElementById('timerProgressFill').style.width = Math.min(100, (timerSeconds/totalSec)*100) + '%';
+}
+
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timerBtn').textContent = 'Resume';
+  } else {
+    timerRunning = true;
+    document.getElementById('timerBtn').textContent = 'Pause';
+    timerInterval = setInterval(() => {
+      timerSeconds++;
+      document.getElementById('timerDisplay').textContent = formatTime(timerSeconds);
+      updateTimerStep();
+      if (timerSeconds >= BREWERS[selectedBrewer].totalSec + 90) {
+        clearInterval(timerInterval); timerRunning = false;
+        document.getElementById('timerBtn').textContent = 'Done';
+      }
+    }, 1000);
+  }
+}
+
+function resetTimer() {
+  clearInterval(timerInterval); timerRunning = false; timerSeconds = 0;
+  document.getElementById('timerDisplay').textContent = '0:00';
+  document.getElementById('timerBtn').textContent = 'Start';
+  document.getElementById('timerProgressFill').style.width = '0%';
+  document.getElementById('timerNext').innerHTML = 'Press Start — Bloom pour at <strong>0:00</strong>';
+  document.querySelectorAll('.pour-step').forEach(el => el.classList.remove('active-step','done-step'));
+}
+
+// =============================================================
+// EVENTS
+// =============================================================
+document.getElementById('originGroup').addEventListener('click', e => {
+  const btn = e.target.closest('[data-origin]');
+  if (!btn) return;
+  document.querySelectorAll('[data-origin]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedOrigin = btn.dataset.origin;
+  resetTimer(); renderRecipe();
+});
+
+document.getElementById('roastMeter').addEventListener('click', e => {
+  const seg = e.target.closest('[data-roast]');
+  if (!seg) return;
+  document.querySelectorAll('[data-roast]').forEach(s => s.classList.remove('selected'));
+  seg.classList.add('selected');
+  selectedRoast = seg.dataset.roast;
+  document.getElementById('roastDisplay').textContent = `● ${ROASTS[selectedRoast].label} — ${ROASTS[selectedRoast].desc}`;
+  resetTimer(); renderRecipe();
+});
+
+['brewerCards','championCards'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('click', e => {
+    const card = e.target.closest('[data-brewer]');
+    if (!card) return;
+    document.querySelectorAll('[data-brewer]').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    selectedBrewer = card.dataset.brewer;
+    resetTimer(); renderRecipe();
+  });
+});
+
+// INIT
+renderRecipe();
+
+// =============================================================
+// POUR GUIDE — top-view canvas animation (precision pour-duration model)
+// =============================================================
+//
+// Research-backed pour timing:
+//   Bloom pour:   3–5 ml/s → 45ml in ~10s; rest of bloom stage is CO₂ degassing rest
+//   Standard pours: 6–8 ml/s (specialty barista rate via gooseneck kettle)
+//   Tetsu 4:6:    each 60ml pour in ~10s (source: Bean Rock Coffee / Honest Coffee Guide)
+//   Stir actions: 5–8s active, then immersion rest
+//   Chemex/thick filter: slightly slower ~5 ml/s due to thicker paper resistance
+//   Aeropress inverted: faster fill, ~8 ml/s
+//
+// Each brewer step carries:
+//   pattern: motion type while actively pouring
+//   pourSec: duration of active pouring (seconds) — derived from ml ÷ pour_rate
+//   restPattern: motion during rest phase ('none' | 'stir' | 'drain')
+//
+// The animation engine reads timerSeconds, computes sub-second phase within
+// the step, and shows pouring animation only during pourSec, then switches to
+// restPattern for the remainder.
+
+const POUR_TIMING = {
+  v60: [
+    // Bloom: 45ml at 4ml/s = ~11s pour, rest of 45s stage is CO₂ rest
+    { key:'bloom pour',        pattern:'spiral-out-in', pourSec:11, restPattern:'none' },
+    { key:'bloom rest',        pattern:'none',          pourSec:0,  restPattern:'none' },
+    // 1st pour: 80ml at 7ml/s = ~11s, then drain wait
+    { key:'1st pour',          pattern:'spiral-in',     pourSec:11, restPattern:'none' },
+    // 2nd pour: 75ml at 7ml/s = ~11s
+    { key:'2nd pour',          pattern:'spiral-out',    pourSec:11, restPattern:'none' },
+    // Final: 50ml at 7ml/s = ~7s
+    { key:'final pour',        pattern:'ring',          pourSec:7,  restPattern:'none' },
+  ],
+  orea: [
+    // Flat bed: bloom 50ml at 5ml/s = 10s (centre → edge coverage)
+    { key:'bloom pour',        pattern:'spiral-out-in', pourSec:10, restPattern:'none' },
+    { key:'bloom rest',        pattern:'none',          pourSec:0,  restPattern:'none' },
+    // 1st pour: 100ml at 8ml/s = ~13s (flat bed tolerates fast rate)
+    { key:'1st pour',          pattern:'fill',          pourSec:13, restPattern:'none' },
+    // 2nd pour: 100ml at 8ml/s = ~13s
+    { key:'2nd pour',          pattern:'fill',          pourSec:13, restPattern:'none' },
+  ],
+  switch: [
+    { key:'close switch',          pattern:'none',  pourSec:0,  restPattern:'none' },
+    // Bloom 50ml at 4ml/s = ~13s (gentle — immersion begins immediately)
+    { key:'bloom (immersion)',     pattern:'centre',pourSec:13, restPattern:'none' },
+    // Full 200ml at 5ml/s = ~40s (slow, preserve immersion quality)
+    { key:'full pour (immersion)', pattern:'fill',  pourSec:40, restPattern:'none' },
+    { key:'immersion rest',        pattern:'none',  pourSec:0,  restPattern:'none' },
+    { key:'open switch',           pattern:'none',  pourSec:0,  restPattern:'drain' },
+  ],
+  origami: [
+    { key:'bloom pour',  pattern:'spiral-out-in', pourSec:10, restPattern:'none' },
+    { key:'bloom rest',  pattern:'none',          pourSec:0,  restPattern:'none' },
+    // 1st: 90ml at 7ml/s = ~13s
+    { key:'1st pour',    pattern:'spiral-in',     pourSec:13, restPattern:'none' },
+    // 2nd: 75ml at 7ml/s = ~11s
+    { key:'2nd pour',    pattern:'ring',          pourSec:11, restPattern:'none' },
+    // Final: 40ml at 7ml/s = ~6s
+    { key:'final pour',  pattern:'centre',        pourSec:6,  restPattern:'none' },
+  ],
+  syphon: [
+    { key:'heat lower vessel',  pattern:'none',  pourSec:0,  restPattern:'none' },
+    { key:'add coffee (upper)', pattern:'none',  pourSec:0,  restPattern:'none' },
+    // Stir #1: 8–10 deliberate strokes ~6s
+    { key:'stir (1st)',         pattern:'stir',  pourSec:6,  restPattern:'none' },
+    // 300ml fills the upper chamber (it rises, not poured — shown as fill)
+    { key:'full immersion',     pattern:'none',  pourSec:0,  restPattern:'none' },
+    // Stir #2: ~5s
+    { key:'stir (2nd)',         pattern:'stir',  pourSec:5,  restPattern:'none' },
+    { key:'remove heat',        pattern:'none',  pourSec:0,  restPattern:'drain' },
+  ],
+  chemex: [
+    { key:'pre-rinse filter',  pattern:'none',          pourSec:0,  restPattern:'none' },
+    // Bloom: 60ml at 3.5ml/s = ~17s (Chemex thick paper → slower bloom recommended)
+    { key:'bloom pour',        pattern:'spiral-out-in', pourSec:17, restPattern:'none' },
+    { key:'bloom rest',        pattern:'none',          pourSec:0,  restPattern:'none' },
+    // 1st: 150ml at 5ml/s = ~30s (Chemex intentionally slow — thick filter)
+    { key:'1st pour',          pattern:'spiral-out',    pourSec:30, restPattern:'none' },
+    // 2nd: 150ml at 5ml/s = ~30s
+    { key:'2nd pour',          pattern:'edge-ring',     pourSec:30, restPattern:'none' },
+  ],
+  aeropress: [
+    { key:'inverted',           pattern:'none',  pourSec:0,  restPattern:'none' },
+    { key:'add coffee',         pattern:'none',  pourSec:0,  restPattern:'none' },
+    // Bloom ~50ml at 5ml/s = 10s
+    { key:'bloom',              pattern:'fill',  pourSec:10, restPattern:'none' },
+    // Full pour ~200ml at 8ml/s = ~25s (Aeropress tolerates fast pour)
+    { key:'full pour',          pattern:'fill',  pourSec:25, restPattern:'none' },
+    // Stir: 8–10 strokes ~5s
+    { key:'stir',               pattern:'stir',  pourSec:5,  restPattern:'none' },
+    { key:'rest',               pattern:'none',  pourSec:0,  restPattern:'none' },
+    // Press: 20–30s slow steady press — shown as centre drain
+    { key:'press',              pattern:'none',  pourSec:0,  restPattern:'drain' },
+  ],
+  kalita: [
+    // Flat bottom: bloom 45ml at 4ml/s = ~11s; 30s rest
+    { key:'bloom pour',  pattern:'spiral-out-in', pourSec:11, restPattern:'none' },
+    { key:'bloom rest',  pattern:'none',          pourSec:0,  restPattern:'none' },
+    // 1st: 80ml at 6ml/s = ~13s (slightly slower than V60, flat = even saturation)
+    { key:'1st pour',    pattern:'spiral-in',     pourSec:13, restPattern:'none' },
+    // 2nd: 75ml at 6ml/s = ~13s
+    { key:'2nd pour',    pattern:'ring',          pourSec:13, restPattern:'none' },
+    // Final: 50ml at 6ml/s = ~8s
+    { key:'final pour',  pattern:'centre',        pourSec:8,  restPattern:'none' },
+  ],
+
+  // CHAMPION METHODS
+  'tetsu-kasuya': [
+    // Each 60ml pour in 10s (confirmed: Bean Rock Coffee, Honest Coffee Guide, beanrockcoffee.com)
+    // Spiral from centre outward and back
+    { key:'1st pour',  pattern:'spiral-out-in', pourSec:10, restPattern:'none' },
+    { key:'2nd pour',  pattern:'spiral-out-in', pourSec:10, restPattern:'none' },
+    { key:'3rd pour',  pattern:'spiral-out-in', pourSec:10, restPattern:'none' },
+    { key:'4th pour',  pattern:'spiral-out-in', pourSec:10, restPattern:'none' },
+    { key:'5th pour',  pattern:'spiral-out-in', pourSec:10, restPattern:'none' },
+  ],
+  'scott-rao': [
+    // Rao: bloom 3× dose = 45ml at 4ml/s = ~11s, then Rao Spin (swirl)
+    { key:'bloom pour', pattern:'spiral-out-in', pourSec:11, restPattern:'none' },
+    { key:'bloom rest', pattern:'none',          pourSec:0,  restPattern:'none' },
+    // 1st main: ~100ml at 7ml/s = ~14s — continuous spiral
+    { key:'1st pour',   pattern:'spiral-out',    pourSec:14, restPattern:'none' },
+    // 2nd: ~60ml at 7ml/s = ~9s — Rao spin at end (swirl)
+    { key:'2nd pour',   pattern:'spiral-in',     pourSec:9,  restPattern:'stir' },
+    { key:'final pour', pattern:'ring',          pourSec:7,  restPattern:'none' },
+  ],
+  'lance-hedrick': [
+    // Orea bypass: bloom centre 45ml at 4ml/s = ~11s
+    { key:'bloom',   pattern:'spiral-out-in', pourSec:11, restPattern:'none' },
+    { key:'rest',    pattern:'none',          pourSec:0,  restPattern:'none' },
+    // High agitation pours ~100ml at 8ml/s = ~13s
+    { key:'1st pour',pattern:'fill',          pourSec:13, restPattern:'none' },
+    { key:'2nd pour',pattern:'fill',          pourSec:13, restPattern:'none' },
+    // Bypass (off-bed) ~50ml outside bed = edge only
+    { key:'bypass',  pattern:'edge-ring',     pourSec:8,  restPattern:'none' },
+  ],
+  'xu-feiran': [
+    // 3-stage: each stage ~60–80ml at 7ml/s
+    { key:'stage 1', pattern:'centre',       pourSec:10, restPattern:'none' },
+    { key:'rest',    pattern:'none',         pourSec:0,  restPattern:'none' },
+    { key:'stage 2', pattern:'spiral-out',   pourSec:11, restPattern:'none' },
+    { key:'stage 3', pattern:'spiral-in',    pourSec:11, restPattern:'none' },
+  ],
+  'carlos-medina': [
+    // 4 pours at 30s intervals: 50/70/60/60ml at 7ml/s = 7/10/9/9s
+    { key:'pour 1',  pattern:'centre',      pourSec:7,  restPattern:'none' },
+    { key:'pour 2',  pattern:'spiral-in',   pourSec:10, restPattern:'none' },
+    { key:'pour 3',  pattern:'ring',        pourSec:9,  restPattern:'none' },
+    { key:'pour 4',  pattern:'centre',      pourSec:9,  restPattern:'none' },
+  ],
+  'george-peng': [
+    // Dual-temp: bloom 40ml at 3ml/s = ~13s (ultra-soft 40ppm water, gentle technique)
+    { key:'bloom',       pattern:'spiral-out-in', pourSec:13, restPattern:'none' },
+    { key:'rest',        pattern:'none',           pourSec:0,  restPattern:'none' },
+    // 1st pour 96°C: ~100ml at 6ml/s = ~17s
+    { key:'1st pour',    pattern:'spiral-in',      pourSec:17, restPattern:'none' },
+    { key:'rest',        pattern:'none',            pourSec:0,  restPattern:'none' },
+    // Melodrip final pour 80°C: ~70ml at 4ml/s = ~18s (Melodrip = slow diffused pour)
+    { key:'melodrip',    pattern:'ring',            pourSec:18, restPattern:'none' },
+  ],
+  'chad-wang': [
+    // Cold unwarmed ceramic — pre-soak filter off-stage (no pour animation)
+    { key:'pre-soak',    pattern:'none',   pourSec:0,  restPattern:'none' },
+    // Bloom centre only: 45ml at 4ml/s = ~11s
+    { key:'bloom',       pattern:'centre', pourSec:11, restPattern:'none' },
+    { key:'rest',        pattern:'none',   pourSec:0,  restPattern:'none' },
+    // Single centre pour — zero circular motion per Chad Wang's technique
+    { key:'single pour', pattern:'centre', pourSec:24, restPattern:'none' },
+    { key:'draw',        pattern:'none',   pourSec:0,  restPattern:'drain' },
+  ],
+  'yuki-mameya': [
+    { key:'heat lower vessel',  pattern:'none',  pourSec:0, restPattern:'none' },
+    { key:'water rises to upper',pattern:'none', pourSec:0, restPattern:'none' },
+    // Stir #1: 10 deliberate strokes ~7s
+    { key:'stir #1',            pattern:'stir',  pourSec:7, restPattern:'none' },
+    { key:'immersion',          pattern:'none',  pourSec:0, restPattern:'none' },
+    // Stir #2: 6 strokes ~5s (Mameya's precise timing)
+    { key:'stir #2',            pattern:'stir',  pourSec:5, restPattern:'none' },
+    { key:'remove heat',        pattern:'none',  pourSec:0, restPattern:'drain' },
+  ],
+};
+
+function getStepTiming(brewerKey, stepName) {
+  const map = POUR_TIMING[brewerKey];
+  const def = { pattern:'none', pourSec:0, restPattern:'none' };
+  if (!map) return def;
+  const lower = stepName.toLowerCase();
+  for (const entry of map) {
+    if (lower.includes(entry.key.toLowerCase())) return entry;
+  }
+  return def;
+}
+
+// Canvas state
+let pourAngle = 0;
+let pourPattern = 'none';
+let pourDropOpacity = 0;
+let pourAnimFrame = null;
+let pourLastTs = null;
+let pourSubPhase = 'rest'; // 'pouring' | 'rest' | 'drain'
+
+function startPourAnimation() {
+  if (pourAnimFrame) return;
+  pourLastTs = null;
+  function animLoop(ts) {
+    if (!timerRunning) { pourAnimFrame = null; return; }
+    if (pourLastTs) {
+      const dt = (ts - pourLastTs) / 1000;
+      const speed = pourPattern === 'stir' ? 5.0
+                  : pourPattern === 'fill' ? 2.2
+                  : pourPattern === 'spiral-out-in' ? 2.8
+                  : 3.0;
+      pourAngle += dt * speed;
+      if (pourSubPhase === 'pouring') {
+        pourDropOpacity = Math.min(1, pourDropOpacity + dt * 4);
+      } else {
+        pourDropOpacity = Math.max(0, pourDropOpacity - dt * 3);
+      }
+    }
+    pourLastTs = ts;
+    drawPourGuide();
+    pourAnimFrame = requestAnimationFrame(animLoop);
+  }
+  pourAnimFrame = requestAnimationFrame(animLoop);
+}
+
+function stopPourAnimation() {
+  if (pourAnimFrame) { cancelAnimationFrame(pourAnimFrame); pourAnimFrame = null; }
+  pourLastTs = null;
+}
+
+function syncPourGuide() {
+  const b = BREWERS[selectedBrewer];
+  const steps = b.steps;
+
+  // Find active step
+  let si = 0;
+  for (let i = steps.length - 1; i >= 0; i--) {
+    if (timerSeconds >= steps[i].at) { si = i; break; }
+  }
+  const step = steps[si];
+  const timing = getStepTiming(selectedBrewer, step.name);
+
+  // Determine how many seconds elapsed since this step started
+  const secIntoStep = timerSeconds - step.at;
+
+  // Sub-phase: pouring for first pourSec seconds, then rest pattern
+  if (secIntoStep < timing.pourSec) {
+    pourSubPhase = 'pouring';
+    pourPattern = timing.pattern;
+  } else if (timing.restPattern === 'drain') {
+    pourSubPhase = 'drain';
+    pourPattern = 'none';
+  } else {
+    pourSubPhase = 'rest';
+    pourPattern = 'none';
+  }
+
+  const guideStepEl = document.getElementById('pourGuideStep');
+  if (guideStepEl) {
+    const secLeft = Math.max(0, timing.pourSec - secIntoStep);
+    if (pourSubPhase === 'pouring' && secLeft > 0) {
+      guideStepEl.textContent = step.name + ' — ' + Math.ceil(secLeft) + 's';
+    } else if (pourSubPhase === 'drain') {
+      guideStepEl.textContent = 'Draining…';
+    } else {
+      guideStepEl.textContent = step.name;
+    }
+  }
+
+  drawPourGuide();
+}
+
+function resetPourGuide() {
+  stopPourAnimation();
+  pourAngle = 0;
+  pourDropOpacity = 0;
+  pourPattern = 'none';
+  pourSubPhase = 'rest';
+  const guideStepEl = document.getElementById('pourGuideStep');
+  if (guideStepEl) guideStepEl.textContent = 'Top View';
+  drawPourGuide();
+}
+
+// ---- CANVAS DRAW ENGINE ----
+function drawPourGuide() {
+  const canvas = document.getElementById('pourGuideCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const CX = W / 2, CY = H / 2;
+  const RO = W * 0.46, RRim = W * 0.42, RI = W * 0.30, RD = W * 0.09;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background disc
+  ctx.beginPath(); ctx.arc(CX, CY, RO, 0, Math.PI * 2);
+  ctx.fillStyle = '#0d2a45'; ctx.fill();
+  ctx.beginPath(); ctx.arc(CX, CY, RO, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(74,159,212,0.30)'; ctx.lineWidth = 2.5; ctx.stroke();
+
+  const isFlat = ['orea','kalita','switch','carlos-medina','lance-hedrick','tetsu-kasuya'].includes(selectedBrewer);
+  const isSyphon = ['syphon','yuki-mameya'].includes(selectedBrewer);
+  const isAero = selectedBrewer === 'aeropress';
+
+  if (isFlat) {
+    ctx.beginPath(); ctx.arc(CX, CY, RI, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(100,70,35,0.28)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(56,189,248,0.12)'; ctx.lineWidth = 1; ctx.stroke();
+    const holeR = RD * 0.35;
+    [[0,0],[0.3,0],[-0.3,0],[0,0.3],[0,-0.3]].forEach(([dx,dy]) => {
+      ctx.beginPath(); ctx.arc(CX + dx * RI, CY + dy * RI, holeR, 0, Math.PI * 2);
+      ctx.fillStyle = '#060f1a'; ctx.fill();
+    });
+  } else if (isSyphon) {
+    ctx.beginPath(); ctx.arc(CX, CY, RI, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(80,55,30,0.3)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(56,189,248,0.1)'; ctx.lineWidth = 1; ctx.stroke();
+    for (let r = 0; r < 3; r++) {
+      for (let a = 0; a < 8; a++) {
+        const ang = (a / 8) * Math.PI * 2, rad = (r + 1) * (RI / 4);
+        ctx.beginPath(); ctx.arc(CX + Math.cos(ang) * rad, CY + Math.sin(ang) * rad, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(56,189,248,0.15)'; ctx.fill();
+      }
+    }
+  } else if (isAero) {
+    [RI, RI * 0.65, RI * 0.35].forEach((r) => {
+      ctx.beginPath(); ctx.arc(CX, CY, r, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(56,189,248,0.10)'; ctx.lineWidth = 1; ctx.stroke();
+    });
+    ctx.beginPath(); ctx.arc(CX, CY, RI * 0.72, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(80,55,30,0.22)'; ctx.fill();
+  } else {
+    const ribCount = selectedBrewer === 'chemex' ? 0 : 20;
+    for (let i = 0; i < ribCount; i++) {
+      const a = (i / ribCount) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.moveTo(CX + Math.cos(a) * (RI + 2), CY + Math.sin(a) * (RI + 2));
+      ctx.lineTo(CX + Math.cos(a) * (RRim - 4), CY + Math.sin(a) * (RRim - 4));
+      ctx.strokeStyle = 'rgba(56,189,248,0.10)'; ctx.lineWidth = 1.2; ctx.stroke();
+    }
+    const fillLevel = Math.min(1, timerSeconds / (BREWERS[selectedBrewer].totalSec || 200));
+    const g = ctx.createRadialGradient(CX, CY, 0, CX, CY, RI - 4);
+    g.addColorStop(0, `rgba(120,80,40,${0.2 + fillLevel * 0.35})`);
+    g.addColorStop(1, `rgba(60,40,20,${0.12 + fillLevel * 0.2})`);
+    ctx.beginPath(); ctx.arc(CX, CY, RI - 4, 0, Math.PI * 2);
+    ctx.fillStyle = g; ctx.fill();
+    ctx.strokeStyle = 'rgba(74,159,212,0.10)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.beginPath(); ctx.arc(CX, CY, RD, 0, Math.PI * 2);
+    ctx.fillStyle = '#060f1a'; ctx.fill();
+    ctx.strokeStyle = 'rgba(56,189,248,0.18)'; ctx.lineWidth = 1; ctx.stroke();
+  }
+
+  // Pour droplet
+  if (pourDropOpacity > 0.02) {
+    const dp = getPourDropPosition(pourPattern, pourAngle, CX, CY, RI, RRim);
+    if (dp) drawGlowDrop(ctx, dp.x, dp.y, dp.trail, pourDropOpacity, pourPattern);
+  }
+
+  // Drain ripple effect
+  if (pourSubPhase === 'drain') {
+    const rippleR = RD * (1.5 + (pourAngle % 1.5));
+    ctx.beginPath(); ctx.arc(CX, CY, rippleR, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(56,189,248,0.25)'; ctx.lineWidth = 1; ctx.stroke();
+  }
+
+  // Idle / rest label
+  if (pourDropOpacity < 0.05) {
+    ctx.fillStyle = 'rgba(180,210,245,0.22)';
+    ctx.font = '500 8px "DM Mono", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const idleLabel = !timerRunning ? '— —' : (pourSubPhase === 'drain' ? 'DRAIN' : 'WAIT');
+    ctx.fillText(idleLabel, CX, CY);
+  }
+}
+
+function getPourDropPosition(pattern, angle, CX, CY, RI, RRim) {
+  const trail = [];
+
+  if (pattern === 'centre') {
+    // Centre drip — tiny jitter to look alive
+    const jit = () => (Math.sin(angle * 7.3) * 2);
+    for (let i = 0; i < 8; i++) trail.push({ x: CX + jit() * (i/8), y: CY + jit() * (i/8) });
+    return { x: CX, y: CY, trail };
+  }
+
+  if (pattern === 'spiral-out-in') {
+    // Centre → outer rim → back to centre (full bloom saturation)
+    // Uses a sine wave on radius: starts small, peaks at ~RRim*0.8, returns to small
+    const TOTAL_TURNS = 2.5;
+    const steps = 32;
+    for (let i = steps; i >= 0; i--) {
+      const t = i / steps;
+      const a = angle - t * Math.PI * 2 * TOTAL_TURNS;
+      const phase = angle % (Math.PI * 2 * TOTAL_TURNS);
+      const radiusFrac = Math.sin(Math.min(1, phase / (Math.PI * TOTAL_TURNS)) * Math.PI);
+      const r = RI * 0.12 + radiusFrac * (RRim * 0.78 - RI * 0.12);
+      trail.push({ x: CX + Math.cos(a) * r, y: CY + Math.sin(a) * r });
+    }
+    return { x: trail[0].x, y: trail[0].y, trail: trail.slice(1) };
+  }
+
+  if (pattern === 'spiral-in') {
+    const steps = 28;
+    for (let i = steps; i >= 0; i--) {
+      const t = i / steps;
+      const a = angle - t * Math.PI * 2 * 2.5;
+      const r = RRim * 0.78 - (1 - (i / steps)) * (RRim * 0.78 - RI * 0.42);
+      trail.push({ x: CX + Math.cos(a) * r, y: CY + Math.sin(a) * r });
+    }
+    return { x: trail[0].x, y: trail[0].y, trail: trail.slice(1) };
+  }
+
+  if (pattern === 'spiral-out') {
+    const steps = 28;
+    for (let i = steps; i >= 0; i--) {
+      const t = i / steps;
+      const a = angle - t * Math.PI * 2 * 2.5;
+      const r = RI * 0.42 + (1 - (i / steps)) * (RRim * 0.78 - RI * 0.42);
+      trail.push({ x: CX + Math.cos(a) * r, y: CY + Math.sin(a) * r });
+    }
+    return { x: trail[0].x, y: trail[0].y, trail: trail.slice(1) };
+  }
+
+  if (pattern === 'ring') {
+    const ringR = RI * 0.68, steps = 28;
+    for (let i = steps; i >= 0; i--) {
+      const a = angle - (i / steps) * Math.PI * 2;
+      trail.push({ x: CX + Math.cos(a) * ringR, y: CY + Math.sin(a) * ringR });
+    }
+    return { x: trail[0].x, y: trail[0].y, trail: trail.slice(1) };
+  }
+
+  if (pattern === 'edge-ring') {
+    const ringR = RRim * 0.72, steps = 28;
+    for (let i = steps; i >= 0; i--) {
+      const a = angle - (i / steps) * Math.PI * 2;
+      trail.push({ x: CX + Math.cos(a) * ringR, y: CY + Math.sin(a) * ringR });
+    }
+    return { x: trail[0].x, y: trail[0].y, trail: trail.slice(1) };
+  }
+
+  if (pattern === 'fill') {
+    // Raster scan: boustrophedon (left→right, right→left alternating rows)
+    const rows = 4, rowH = RI * 0.55;
+    const rowIndex = Math.floor(angle * 1.5) % rows;
+    const rowY = CY - rowH * 0.85 + rowIndex * (rowH * 2 / (rows - 1));
+    const xRange = RI * 0.80;
+    const xPhase = ((angle * 1.5) % 1);
+    const fromLeft = rowIndex % 2 === 0;
+    const xPos = fromLeft
+      ? CX - xRange + xPhase * xRange * 2
+      : CX + xRange - xPhase * xRange * 2;
+    for (let i = 8; i >= 0; i--) {
+      const prevX = fromLeft ? xPos - (i / 8) * xRange * 0.3 : xPos + (i / 8) * xRange * 0.3;
+      trail.push({ x: prevX, y: rowY });
+    }
+    return { x: xPos, y: rowY, trail: trail.slice(1) };
+  }
+
+  if (pattern === 'stir') {
+    const stirR = RI * 0.52, steps = 32;
+    for (let i = steps; i >= 0; i--) {
+      const a = angle - (i / steps) * Math.PI * 3.5;
+      trail.push({ x: CX + Math.cos(a) * stirR, y: CY + Math.sin(a) * stirR });
+    }
+    return { x: trail[0].x, y: trail[0].y, trail: trail.slice(1) };
+  }
+
+  return null;
+}
+
+function drawGlowDrop(ctx, x, y, trail, alpha, pattern) {
+  if (trail && trail.length > 1) {
+    for (let i = 1; i < trail.length; i++) {
+      const t = i / trail.length;
+      ctx.beginPath();
+      ctx.moveTo(trail[i - 1].x, trail[i - 1].y);
+      ctx.lineTo(trail[i].x, trail[i].y);
+      const trailAlpha = t * 0.45 * alpha;
+      ctx.strokeStyle = pattern === 'stir'
+        ? `rgba(240,180,41,${trailAlpha})`
+        : `rgba(56,189,248,${trailAlpha})`;
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+    }
+  }
+  const glowR = 9;
+  const g = ctx.createRadialGradient(x, y, 0, x, y, glowR);
+  const col = pattern === 'stir' ? '240,180,41' : '56,189,248';
+  g.addColorStop(0, `rgba(${col},${alpha * 0.55})`);
+  g.addColorStop(0.5, `rgba(${col},${alpha * 0.22})`);
+  g.addColorStop(1, `rgba(${col},0)`);
+  ctx.beginPath(); ctx.arc(x, y, glowR, 0, Math.PI * 2);
+  ctx.fillStyle = g; ctx.fill();
+  ctx.beginPath(); ctx.arc(x, y, 2.8, 0, Math.PI * 2);
+  ctx.fillStyle = `rgba(255,255,255,${alpha * 0.92})`; ctx.fill();
+}
+
+// Patch toggleTimer / resetTimer / updateTimerStep
+const _origToggle = toggleTimer;
+toggleTimer = function() {
+  _origToggle();
+  if (timerRunning) {
+    syncPourGuide();
+    startPourAnimation();
+  } else {
+    stopPourAnimation();
+    drawPourGuide();
+  }
+};
+
+const _origReset = resetTimer;
+resetTimer = function() {
+  _origReset();
+  resetPourGuide();
+};
+
+const _origUpdateTimerStep = updateTimerStep;
+updateTimerStep = function() {
+  _origUpdateTimerStep();
+  syncPourGuide();
+};
+
+// Initial static draw
+drawPourGuide();
+
+
+// =============================================================
+// MOBILE TAB STRIPS
+// =============================================================
+
+// Origin data for mobile chips (flag, short name, sub)
+const ORIGIN_CHIPS = [
+  { key:"eth-yirga",      flag:"🇪🇹", name:"Yirgacheffe",   sub:"Washed" },
+  { key:"eth-sidama",     flag:"🇪🇹", name:"Sidama",         sub:"Natural" },
+  { key:"eth-guji",       flag:"🇪🇹", name:"Guji",           sub:"Anaerobic" },
+  { key:"kenya",          flag:"🇰🇪", name:"Kirinyaga",      sub:"SL28" },
+  { key:"colombia-huila", flag:"🇨🇴", name:"Huila",          sub:"Washed" },
+  { key:"colombia-nar",   flag:"🇨🇴", name:"Nariño",         sub:"Washed" },
+  { key:"colombia-geisha",flag:"🇨🇴", name:"Geisha",         sub:"Cauca" },
+  { key:"costa-rica",     flag:"🇨🇷", name:"Tarrazú",        sub:"Honey" },
+  { key:"panama",         flag:"🇵🇦", name:"Boquete",        sub:"Geisha" },
+  { key:"guatemala",      flag:"🇬🇹", name:"Huehue",         sub:"Washed" },
+  { key:"brazil-sp",      flag:"🇧🇷", name:"Mogiana",        sub:"Natural" },
+  { key:"brazil-minas",   flag:"🇧🇷", name:"Minas",          sub:"Pulped" },
+  { key:"peru",           flag:"🇵🇪", name:"Cajamarca",      sub:"Washed" },
+  { key:"yemen",          flag:"🇾🇪", name:"Haraaz",         sub:"Natural" },
+  { key:"sumatra",        flag:"🇮🇩", name:"Mandheling",     sub:"Wet Hull" },
+  { key:"flores",         flag:"🇮🇩", name:"Flores",         sub:"Washed" },
+  { key:"taiwan",         flag:"🇹🇼", name:"Ali Mtn",        sub:"Washed" },
+  { key:"japan-toku",     flag:"🇯🇵", name:"Tokushima",      sub:"Washed" },
+  { key:"rwanda",         flag:"🇷🇼", name:"Nyamasheke",     sub:"Washed" },
+  { key:"burundi",        flag:"🇧🇮", name:"Kayanza",        sub:"Washed" },
+];
+
+function buildMobileOriginStrip() {
+  const strip = document.getElementById('mobileOriginStrip');
+  strip.innerHTML = '';
+  ORIGIN_CHIPS.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'mobile-origin-chip' + (o.key === selectedOrigin ? ' active' : '');
+    btn.dataset.origin = o.key;
+    btn.innerHTML = `
+      <span class="mobile-origin-chip-flag">${o.flag}</span>
+      <span class="mobile-origin-chip-name">${o.name}</span>
+      <span class="mobile-origin-chip-sub">${o.sub}</span>
+    `;
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.mobile-origin-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      // also sync the sidebar
+      document.querySelectorAll('[data-origin]').forEach(b => b.classList.remove('active'));
+      document.querySelector(`[data-origin="${o.key}"]`)?.classList.add('active');
+      selectedOrigin = o.key;
+      // scroll chip into view
+      btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      resetTimer(); renderRecipe();
+    });
+    strip.appendChild(btn);
+  });
+}
+
+// Mobile roast strip
+document.getElementById('mobileRoastStrip').addEventListener('click', e => {
+  const chip = e.target.closest('[data-roast]');
+  if (!chip) return;
+  document.querySelectorAll('.mobile-roast-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  // sync sidebar roast meter
+  document.querySelectorAll('[data-roast]').forEach(s => s.classList.remove('selected'));
+  document.querySelector(`.roast-segment[data-roast="${chip.dataset.roast}"]`)?.classList.add('selected');
+  selectedRoast = chip.dataset.roast;
+  document.getElementById('roastDisplay').textContent = `● ${ROASTS[selectedRoast].label} — ${ROASTS[selectedRoast].desc}`;
+  resetTimer(); renderRecipe();
+});
+
+// Show/hide strips based on viewport, build on first show
+function handleResize() {
+  const isMobile = window.innerWidth <= 480;
+  const strips = document.getElementById('mobileStrips');
+  if (isMobile) {
+    strips.style.display = 'flex';
+    if (!strips.dataset.built) {
+      buildMobileOriginStrip();
+      strips.dataset.built = '1';
+    }
+  } else {
+    strips.style.display = 'none';
+  }
+}
+
+window.addEventListener('resize', handleResize);
+handleResize(); // run on load
+</script>
+</body>
+</html>
